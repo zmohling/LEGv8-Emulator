@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "instruction_impl.h"
-//#include "reader.h"
+#include "reader.h"
 
 
 uint64_t X[512];            // main memory
