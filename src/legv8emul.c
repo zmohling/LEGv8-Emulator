@@ -44,6 +44,6 @@ int main(int argc, char* argv[]) {
   // AND(X, 10, 9, 8);
 
   // printf("result: %lu\n", X[10]);
-
+  //
   return 0;
 }
