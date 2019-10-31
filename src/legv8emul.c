@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "instruction_impl.h"
 #include "reader.h"
@@ -13,11 +14,15 @@ Print out the usage for this program
 */
 void usage() { printf("./legv8emul <assembled legv8asm .machine file>"); }
 
-void DEBUG_print_bits(uint32_t num) {
+char* DEBUG_bits(uint32_t num) {
+  char* bits = malloc(33 * sizeof(char));
+  bits[32] = '\0';
+
   for (int i = (32) - 1; i >= 0; i--) {
-    printf("%d", (num >> i) & 0x1);
+    bits[31 - i] = ((num >> i) & 0x1) + 48;
   }
-  printf("\n");
+
+  return bits;
 }
 
 int main(int argc, char* argv[]) {
@@ -30,7 +35,7 @@ int main(int argc, char* argv[]) {
 #ifdef DEBUG_MODE
     // Print bits of each instruction
     for (int i = 0; instructions[i]; i++) {
-      DEBUG_print_bits(instructions[i]);
+      printf("%s\n", DEBUG_bits(instructions[i]));
     }
 #endif
 
