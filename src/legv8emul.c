@@ -15,11 +15,10 @@ void usage(){
     printf("./legv8emul <assembled legv8asm .machine file>");
 }
 
-
-
 int main(int argc, char* argv[]){
     
     if(argc == 1){
+
         // create uint32_t array of instructions
     }else{
         usage();
