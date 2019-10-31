@@ -1,223 +1,180 @@
 #include "find_opcode.h"
 #include "instruction_impl.h"
+#include "parser.h"
 #include <stdint.h>
 
 
 void call_opcode(uint32_t instruction) {
-  int found = 0;
   uint32_t opcode = instruction >> 21;
   switch (opcode) {
-  case 11111111110:
-    found = 1;
+  case OPCODE_DUMP:
     DUMP();
-    break;
+    return;
 
-  case 11111111111:
-    found = 1;
+  case OPCODE_HALT:
     HALT();
-    break;
+    return;
 
-  case 11111111100:
-    found = 1;
+  case OPCODE_PRNL:
     PRNL();
-    break;
+    return;
 
-  case 10011011110:
-    found = 1;
+  case OPCODE_UMULH:
     UMULH();
-    break;
+    return;
 
-  case 10011010110:
-    found = 1;
+  case OPCODE_UDIV:
     UDIV();
-    break;
+    return;
 
-  case 10011011010:
-    found = 1;
+  case OPCODE_SMULH:
     SMULH();
-    break;
+    return;
 
-  case 10011010110: // already appeared in switch at line
-    found = 1;
+  case OPCODE_SDIV:
     SDIV();
-    break;
+    return;
 
-  case 10011011000:
-    found = 1;
+  case OPCODE_MUL:
     MUL();
-    break;
+    return;
 
-  case 11111000010:
-    found = 1;
+  case OPCODE_LDUR:
     LDUR();
-    break;
+    return;
 
-  case 11111000000:
-    found = 1;
+  case OPCODE_STUR:
     STUR();
-    break;
+    return;
 
-  case 11101011000:
-    found = 1;
+  case OPCODE_SUBS:
     SUBS();
-    break;
+    return;
 
-  case 11010110000:
-    found = 1;
+  case OPCODE_BR:
     BR();
-    break;
+    return;
 
-  case 11010011011:
-    found = 1;
+  case OPCODE_LSL:
     LSL();
-    break;
+    return;
 
-  case 11010011010:
-    found = 1;
+  case OPCODE_LSR:
     LSR();
-    break;
+    return;
 
-  case 11001011000:
-    found = 1;
+  case OPCODE_SUB:
     SUB();
-    break;
+    return;
 
-  case 11101010000:
-    found = 1;
+  case OPCODE_EOR:
     EOR();
-    break;
+    return;
 
-  case 10111000100:
-    found = 1;
+  case OPCODE_LDURSW:
     LDURSW();
-    break;
+    return;
 
-  case 10111000000:
-    found = 1;
+  case OPCODE_STURW:
     STURW();
-    break;
+    return;
 
-  case 10101011000:
-    found = 1;
+  case OPCODE_ADDS:
     ADDS();
-    break;
+    return;
 
-  case 10101010000:
-    found = 1;
+  case OPCODE_ORR:
     ORR();
-    break;
+    return;
 
-  case 10001011000:
-    found = 1;
+  case OPCODE_ADD:
     ADD();
-    break;
+    return;
 
-  case 10001010000:
-    found = 1;
+  case OPCODE_AND:
     AND();
-    break;
+    return;
 
-  case 01111000010:
-    found = 1;
+  case OPCODE_LDURH:
     LDURH();
-    break;
+    return;
 
-  case 01111000000:
-    found = 1;
+  case OPCODE_STURH:
     STURH();
-    break;
+    return;
 
-  case 00111000010:
-    found = 1;
+  case OPCODE_LDURB:
     LDURB();
-    break;
+    return;
 
-  case 00111000000:
-    found = 1;
+  case OPCODE_STURB:
     STURB();
-    break;
+    return;
 
   default:
     opcode = opcode >> 1;
     break;
 }
-  if (!found) {
-    switch(opcode) {
-    case 1111111101:
-      found = 1;
-      PRNT();
-      break;
-
-    case 1011001000:
-      found = 1;
-      ORRI();
-      break;
-
-    case 1101001000:
-      found = 1;
-      EORI();
-      break;
-
-    case 1001000100:
-      found = 1;
-      ADDI();
-      break;
-
-    case 1001001000:
-      found = 1;
-      ANDI();
-      break;
-
-    case 1101000100:
-      found = 1;
-      SUBI();
-      break;
-
-    case 1111000100:
-      found = 1;
-      SUBIS();
-      break;
-
-    default:
-      opcode = opcode >> 2;
-      break;
-    }
+  switch(opcode) {
+  case OPCODE_PRNT:
+    PRNT();
+    return;
+    
+  case OPCODE_ORRI:
+    ORRI();
+    return;
+    
+  case OPCODE_EORI:
+    EORI();
+    return;
+    
+  case OPCODE_ADDI:
+    ADDI();
+    return;
+    
+  case OPCODE_ANDI:
+    ANDI();
+    return;
+    
+  case OPCODE_SUBI:
+    SUBI();
+    return;
+    
+  case OPCODE_SUBIS:
+    SUBIS();
+    return;
+    
+  default:
+    opcode = opcode >> 2;
+    break;
   }
 
-  if (!found) {
-    switch(opcode) {
-    case 10110100:
-      found = 1;
-      CBNZ();
-      break;
-
-    case 10110101:
-      found = 1;
-      CBZ();
-      break;
-
-    case 01010100:
-      found = 1;
-      BC();
-      break;
-
-    default:
-      opcode = opcode >> 2;
-      break;
-    }
+  switch(opcode) {
+  case OPCODE_CBNZ:
+    CBNZ();
+    return;
+    
+  case OPCODE_CBZ:
+    CBZ();
+    return;
+    
+  case OPCODE_BC:
+    BC();
+    return;
+    
+  default:
+    opcode = opcode >> 2;
+    break;
   }
 
-  if (!found) {
-    switch(opcode) {
-    case 000101:
-      found = 1;
-      B();
-      break;
-
-    case 100101:
-      found = 1;
-      BL();
-      break;
-    }
+  switch(opcode) {
+  case OPCODE_B:
+    B();
+    return;
+    
+  case OPCODE_BL:
+    BL();
+    return;
   }
+  return; // should be exception here for if the opcode wasn't found or something similar
 }
