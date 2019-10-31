@@ -23,7 +23,7 @@ void CBNZ();
 
 void CBZ();
 
-void DUMP();
+void DUMP(uint64_t *X, uint64_t *stack);
 
 void EOR(uint64_t *X, uint8_t dest, uint8_t source1, uint8_t source2);
 

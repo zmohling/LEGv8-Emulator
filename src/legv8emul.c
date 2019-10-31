@@ -29,7 +29,9 @@ int main(int argc, char* argv[]){
     ADDI(X, 9, 9, 1);
     ADD(X, 9, 9, 8);
 
-    printf("%d\n", (int)X[9]);
+    DUMP(X, stack);
+
+    //printf("%d\n", (int)X[9]);
 
     return 0;
 }

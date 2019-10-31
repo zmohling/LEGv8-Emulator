@@ -1,6 +1,7 @@
 #include "instruction_impl.h"
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 void ADD(uint64_t *X, uint8_t dest, uint8_t source1, uint8_t source2){
     X[dest] = X[source1] + X[source2];
@@ -20,7 +21,7 @@ void ANDI(uint64_t *X, uint8_t dest, uint8_t source, uint64_t immediate){
 
 // missing methods here
 
-void DUMP(){
+void DUMP(uint64_t *X, uint64_t *stack){
     printf("Registers:\n");
 
     char* reg_name = "     ";
@@ -40,7 +41,7 @@ void DUMP(){
                 break;
             default: reg_name = "     ";
         }
-        printf("%6s X%d", reg_name);
+        printf("%6s X%02d: 0x%016lx (%d)\n", reg_name, i, X[i], (int)X[i]);
     }
 }
 
