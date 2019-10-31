@@ -25,14 +25,14 @@ uint32_t* read_instructions(const char* filepath) {
   uint32_t* instructions = malloc(f_size * sizeof(uint32_t));
 
   for (int i = 0; i < f_size; i++) {
-    uint32_t be_word;
+    uint32_t big_endian_word;
 
-    if (!fread(&be_word, sizeof(uint32_t), 1, f)) {
+    if (!fread(&big_endian_word, sizeof(uint32_t), 1, f)) {
       fprintf(stderr, "Error (%d)\n", errno);
       exit(-1);
     }
 
-    instructions[i] = be32toh(be_word);
+    instructions[i] = be32toh(big_endian_word);
   }
 
   fclose(f);

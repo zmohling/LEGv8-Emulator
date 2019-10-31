@@ -28,7 +28,7 @@ INC_DIRS=$(SRC_BASE_DIR)
 INC_FLAGS=$(foreach d, $(INC_DIRS), -I$d)
 
 # Compilation and linking flags
-DEBUG_FLAGS=-Wall -ggdb3 -Og
+DEBUG_FLAGS=-Wall -ggdb3 -Og -D DEBUG_MODE
 RELEASE_FLAGS=-O3
 C_FLAGS=$(INC_FLAGS) $(DEBUG_FLAGS)
 LD_FLAGS=
