@@ -81,13 +81,25 @@ typedef struct iw_format {
   uint8_t Rd : 5;
 } iw_format_t;
 
-union instruction_formats {
+union instruction {
   r_format_t r;
   i_format_t i;
   d_format_t d;
   b_format_t b;
   cb_format_t cb;
   iw_format_t iw;
-} instruction;
+};
+
+typedef enum instruction_format {
+  format_NA,
+  format_R,
+  format_I,
+  format_D,
+  format_B,
+  format_CB,
+  format_IW
+} instruction_format_t;
+
+union instruction parse(uint32_t* word);
 
 #endif
