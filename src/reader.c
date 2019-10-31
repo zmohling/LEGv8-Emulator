@@ -1,9 +1,14 @@
 #include "reader.h"
 
-#include <endian.h>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef __APPLE__
+#include <../include/linux_endian.h>
+#elif __linux__
+#include <endian.h>
+#endif
 
 static unsigned int get_size(FILE* f) {
   fseek(f, 0, SEEK_END);  // seek to end of file
@@ -30,5 +35,7 @@ uint32_t* read_instructions(const char* filepath) {
     instructions[i] = be32toh(be_word);
   }
 
-  fclose();
+  fclose(f);
+
+  return instructions;
 }

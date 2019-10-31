@@ -26,12 +26,11 @@ int main(int argc, char* argv[]){
     }
 
 
-    ADDI(X, 8, 8, 2);
+    ADDI(X, 8, 8, -2);
     ADDI(X, 9, 9, 1);
+    ADD(X, 9, 9, 8);
 
-    AND(X, 10, 9, 8);
-
-    printf("result: %lu\n", X[10]);
+    printf("%d\n", (int)X[9]);
 
     return 0;
 }
