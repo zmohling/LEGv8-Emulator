@@ -5,14 +5,17 @@
 #include "instruction_impl.h"
 #include "reader.h"
 
-uint64_t X[512];         // main memory
-uint64_t stack[64];      // stack
+#define MAIN_MEMORY_SIZE        512
+#define STACK_SIZE              64
+
+uint64_t X[MAIN_MEMORY_SIZE];         // main memory
+uint64_t stack[STACK_SIZE];      // stack
 uint32_t* instructions;  // all instructions
 
 /*
 Print out the usage for this program
 */
-void usage() { printf("./legv8emul <assembled legv8asm .machine file>"); }
+void usage() { printf("USAGE: ./legv8emul <assembled legv8asm .machine file>\n"); }
 
 char* DEBUG_bits(uint32_t num) {
   char* bits = malloc(33 * sizeof(char));
@@ -41,11 +44,14 @@ int main(int argc, char* argv[]) {
 
   } else {
     usage();
+    return 0;
   }
 
-  // ADDI(X, 8, 8, 2);
+   ADDI(X, 0, 0, 2);
   // ADDI(X, 9, 9, 1);
+    DUMP(X, MAIN_MEMORY_SIZE, stack, STACK_SIZE);
 
+    //printf("%d\n", (int)X[9]);
   // AND(X, 10, 9, 8);
 
   // printf("result: %lu\n", X[10]);

@@ -37,7 +37,7 @@ void call_opcode(uint32_t instruction) {
     SMULH();
     break;
 
-  case 10011010110:
+  case 10011010110: // already appeared in switch at line
     found = 1;
     SDIV();
     break;
