@@ -1,115 +1,88 @@
 #include "find_opcode.h"
-#include "instruction_impl.h"
 #include "parser.h"
 #include <stdint.h>
 
 
-void call_opcode(uint32_t instruction) {
+uint32_t call_opcode(uint32_t instruction) {
   uint32_t opcode = instruction >> 21;
   switch (opcode) {
   case OPCODE_DUMP:
-    DUMP();
-    return;
+    return OPCODE_DUMP;
 
   case OPCODE_HALT:
-    HALT();
-    return;
+    return OPCODE_HALT;
 
   case OPCODE_PRNL:
-    PRNL();
-    return;
+    return OPCODE_PRNL;
 
   case OPCODE_UMULH:
-    UMULH();
-    return;
+    return OPCODE_UMULH;
 
   case OPCODE_UDIV:
-    UDIV();
-    return;
+    return OPCODE_UDIV;
 
   case OPCODE_SMULH:
-    SMULH();
-    return;
+    return OPCODE_SMULH;
 
   case OPCODE_SDIV:
-    SDIV();
-    return;
+    return OPCODE_SDIV;
 
   case OPCODE_MUL:
-    MUL();
-    return;
+    return OPCODE_MUL;
 
   case OPCODE_LDUR:
-    LDUR();
-    return;
+    return OPCODE_LDUR;
 
   case OPCODE_STUR:
-    STUR();
-    return;
+    return OPCODE_STUR;
 
   case OPCODE_SUBS:
-    SUBS();
-    return;
+    return OPCODE_SUSB;
 
   case OPCODE_BR:
-    BR();
-    return;
+    return OPCODE_BR;
 
   case OPCODE_LSL:
-    LSL();
-    return;
+    return OPCODE_LSL;
 
   case OPCODE_LSR:
-    LSR();
-    return;
+    return OPCODE_LSR;
 
   case OPCODE_SUB:
-    SUB();
-    return;
+    return OPCODE_SUB;
 
   case OPCODE_EOR:
-    EOR();
-    return;
+    return OPCODE_EOR;
 
   case OPCODE_LDURSW:
-    LDURSW();
-    return;
+    return OPCODE_LDURSW;
 
   case OPCODE_STURW:
-    STURW();
-    return;
+    return OPCODE_STURW;
 
   case OPCODE_ADDS:
-    ADDS();
-    return;
+    return OPCODE_ADDS;
 
   case OPCODE_ORR:
-    ORR();
-    return;
+    return OPCODE_ORR;
 
   case OPCODE_ADD:
-    ADD();
-    return;
+    return OPCODE_ADD;
 
   case OPCODE_AND:
-    AND();
-    return;
+    return OPCODE_AND;
 
   case OPCODE_LDURH:
-    LDURH();
-    return;
+    return OPCODE_LDURH;
 
   case OPCODE_STURH:
-    STURH();
-    return;
+    return OPCODE_STURH;
 
   case OPCODE_LDURB:
-    LDURB();
-    return;
+    return OPCODE_LDURB;
 
   case OPCODE_STURB:
-    STURB();
-    return;
+    return OPCODE_STURB;
 
   default:
     opcode = opcode >> 1;
@@ -117,32 +90,25 @@ void call_opcode(uint32_t instruction) {
 }
   switch(opcode) {
   case OPCODE_PRNT:
-    PRNT();
-    return;
+    return OPCODE_PRNT;
     
   case OPCODE_ORRI:
-    ORRI();
-    return;
+    return OPCODE_ORRI;
     
   case OPCODE_EORI:
-    EORI();
-    return;
+    return OPCODE_EORI;
     
   case OPCODE_ADDI:
-    ADDI();
-    return;
+    return OPCODE_ADDI;
     
   case OPCODE_ANDI:
-    ANDI();
-    return;
+    return OPCODE_ANDI;
     
   case OPCODE_SUBI:
-    SUBI();
-    return;
+    return OPCODE_SUBI;
     
   case OPCODE_SUBIS:
-    SUBIS();
-    return;
+    return OPCODE_SUBIS;
     
   default:
     opcode = opcode >> 2;
@@ -151,16 +117,13 @@ void call_opcode(uint32_t instruction) {
 
   switch(opcode) {
   case OPCODE_CBNZ:
-    CBNZ();
-    return;
+    return OPCODE_CBNZ;
     
   case OPCODE_CBZ:
-    CBZ();
-    return;
+    return OPCODE_CBZ;
     
   case OPCODE_BC:
-    BC();
-    return;
+    return OPCODE_BC;
     
   default:
     opcode = opcode >> 2;
@@ -169,12 +132,10 @@ void call_opcode(uint32_t instruction) {
 
   switch(opcode) {
   case OPCODE_B:
-    B();
-    return;
+    return OPCODE_B;
     
   case OPCODE_BL:
-    BL();
-    return;
+    return OPCODE_BL;
   }
-  return; // should be exception here for if the opcode wasn't found or something similar
+  exit(-1);
 }
