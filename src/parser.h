@@ -2,6 +2,7 @@
 #define PARSER_H_
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #define OPCODE_ADD 0b10001011000
 #define OPCODE_ADDI 0b1001000100
@@ -41,6 +42,8 @@
 #define OPCODE_UDIV 0b10011010110
 #define OPCODE_UMULH 0b10011011110
 
+#define NUM_OPCODES 37
+
 extern const uint32_t opcodes[37];
 
 typedef enum instruction_format {
@@ -53,55 +56,59 @@ typedef enum instruction_format {
   format_IW
 } instruction_format_t;
 
-typedef struct r_format {
-  uint16_t opcode : 11;
-  uint8_t Rm : 5;
-  uint8_t shamt : 6;
-  uint8_t Rn : 5;
-  uint8_t Rd : 5;
-} r_format_t;
+typedef struct instruction {
+  // int type;
 
-typedef struct i_format {
-  uint16_t opcode : 10;
-  uint16_t ALU_immediate : 12;
-  uint8_t Rn : 5;
-  uint8_t Rd : 5;
-} i_format_t;
+  union {
+    uint32_t word;
 
-typedef struct d_format {
-  uint16_t opcode : 11;
-  uint16_t DT_address : 9;
-  uint8_t op : 2;
-  uint8_t Rn : 5;
-  uint8_t Rt : 5;
-} d_format_t;
+    union {
+      struct {
+        uint32_t Rd : 5;
+        uint32_t Rn : 5;
+        uint32_t shamt : 6;
+        uint32_t Rm : 5;
+        uint32_t opcode : 11;
+      } r;
 
-typedef struct b_format {
-  uint8_t opcode : 6;
-  uint32_t BR_address : 26;
-} b_format_t;
+      struct {
+        uint32_t Rd : 5;
+        uint32_t Rn : 5;
+        uint32_t ALU_immediate : 12;
+        uint32_t opcode : 10;
+      } i;
 
-typedef struct cb_format {
-  uint8_t opcode : 8;
-  uint32_t COND_BR_address : 19;
-  uint16_t Rt : 5;
-} cb_format_t;
+      struct {
+        uint32_t Rt : 5;
+        uint32_t Rn : 5;
+        uint32_t op : 2;
+        uint32_t DT_address : 9;
+        uint32_t opcode : 11;
+      } d;
 
-typedef struct iw_format {
-  uint16_t opcode : 11;
-  uint16_t MOV_immediate : 16;
-  uint8_t Rd : 5;
-} iw_format_t;
+      struct {
+        uint32_t BR_address : 26;
+        uint32_t opcode : 6;
+      } b;
 
-union instruction {
-  r_format_t r;
-  i_format_t i;
-  d_format_t d;
-  b_format_t b;
-  cb_format_t cb;
-  iw_format_t iw;
-};
+      struct {
+        uint32_t Rt : 5;
+        uint32_t COND_BR_address : 19;
+        uint32_t opcode : 8;
+      } cb;
 
-union instruction parse(uint32_t* word);
+      struct {
+        uint32_t Rd : 5;
+        uint32_t MOV_immediate : 16;
+        uint32_t opcode : 11;
+      } iw;
+    };
+  };
+
+} instruction_t;
+
+typedef void (*r_format_func)(uint64_t*, uint8_t, uint8_t, uint8_t);
+
+instruction_t parse(uint32_t* word);
 
 #endif
