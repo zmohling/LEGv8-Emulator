@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <ctype.h>
 
+uint8_t FLAGS[FLAGS_LENGTH];
+
 /* ---------- R instructions ---------- */
 
 void ADD(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
@@ -39,6 +41,12 @@ void BR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
   X[PC] = X[Rd];
 }
 
+void SUBS(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
+  int s = (int) X[Rn] - (int) X[Rm];
+
+  set_all_flags(s);
+}
+
 /* ---------- I instructions ---------- */
 
 void ADDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate){
@@ -61,6 +69,12 @@ void SUBI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate){
   X[Rd] = X[Rn] - ALU_immediate;
 }
 
+void SUBIS(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate){
+  int s = (int) X[Rn] - (int) ALU_immediate;
+
+  set_all_flags(s);
+}
+
 /* ---------- B instructions ---------- */
 
 void B(uint64_t *X, uint32_t BR_address){
@@ -74,6 +88,10 @@ void BL(uint64_t *X, uint32_t BR_address){
 
 /* ---------- CB instructions --------- */
 
+void B_cond(uint64_t *X, uint32_t COND_BR_address, uint8_t Rt){
+  
+}
+
 /* ---------- D instructions ---------- */
 
 void LDUR(uint64_t *X, uint64_t *stack, uint8_t Rd, uint8_t address, uint16_t offset){
@@ -84,6 +102,37 @@ void LDUR(uint64_t *X, uint64_t *stack, uint8_t Rd, uint8_t address, uint16_t of
 
 char printable_char(uint8_t c){
   return isprint(c) ? c : '.';
+}
+
+void set_all_flags(int s){
+  for(int i = 0; i < FLAGS_LENGTH; i ++){
+    FLAGS[i] = 0;
+  }
+
+  if(s == 0){
+    FLAGS[EQ] = 1;
+  }
+  if(s >= 0){
+    FLAGS[GE] = 1;
+    FLAGS[HS] = 1;
+    FLAGS[PL] = 1;
+  }
+  if(s > 0){
+    FLAGS[GT] = 1;
+    FLAGS[HI] = 1;
+  }
+  if(s <= 0){
+    FLAGS[LE] = 1;
+    FLAGS[LS] = 1;
+  }
+  if(s < 0){
+    FLAGS[LO] = 1;
+    FLAGS[LT] = 1;
+    FLAGS[MI] = 1;
+  }
+  if(s != 0){
+    FLAGS[NE] = 1;
+  }
 }
 
 void print_hexdump(int8_t *start, size_t size){
