@@ -57,8 +57,6 @@ typedef enum instruction_format {
 } instruction_format_t;
 
 typedef struct instruction {
-  // int type;
-
   union {
     uint32_t word;
 
@@ -69,14 +67,14 @@ typedef struct instruction {
         uint32_t shamt : 6;
         uint32_t Rm : 5;
         uint32_t opcode : 11;
-      } r;
+      } R;
 
       struct {
         uint32_t Rd : 5;
         uint32_t Rn : 5;
         uint32_t ALU_immediate : 12;
         uint32_t opcode : 10;
-      } i;
+      } I;
 
       struct {
         uint32_t Rt : 5;
@@ -84,30 +82,29 @@ typedef struct instruction {
         uint32_t op : 2;
         uint32_t DT_address : 9;
         uint32_t opcode : 11;
-      } d;
+      } D;
 
       struct {
         uint32_t BR_address : 26;
         uint32_t opcode : 6;
-      } b;
+      } B;
 
       struct {
         uint32_t Rt : 5;
         uint32_t COND_BR_address : 19;
         uint32_t opcode : 8;
-      } cb;
+      } CB;
 
       struct {
         uint32_t Rd : 5;
         uint32_t MOV_immediate : 16;
         uint32_t opcode : 11;
-      } iw;
+      } IW;
     };
   };
-
 } instruction_t;
 
-typedef void (*r_format_func)(uint64_t*, uint8_t, uint8_t, uint8_t);
+typedef void (*R_format_func_t)(uint64_t*, uint8_t, uint8_t, uint8_t, uint8_t);
 
 instruction_t parse(uint32_t* word);
 

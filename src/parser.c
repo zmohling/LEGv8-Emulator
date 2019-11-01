@@ -39,10 +39,10 @@ static const struct {
                          {OPCODE_SUBI, format_I},  {OPCODE_SUBIS, format_I},
                          {OPCODE_SUBIS, format_I}, {OPCODE_SUBS, format_R},
                          {OPCODE_UDIV, format_R},  {OPCODE_UMULH, format_R}};
+
 static const struct {
   const uint32_t opcode;
-  void (*func_pointer)(uint64_t*, uint8_t, uint8_t,
-                       uint8_t);  // register, Rd, Rm, Rn
+  const R_format_func_t fp;
 } R_opcode_func_map[] = {
     {OPCODE_ADD, ADD}/*,       {OPCODE_AND, format_R},
     {OPCODE_BR, format_R},   {OPCODE_DUMP, format_R},
@@ -76,12 +76,17 @@ static uint32_t get_opcode(uint32_t word) {
 }
 
 static void parse_R_format(instruction_t* instruction) {
-  printf("Hello, R instruction!\n");
+  /* Get function pointer */
+  R_format_func_t fp = NULL;
+  for (int i = 0; R_opcode_func_map[i].fp; i++) {
+    if (R_opcode_func_map[i].opcode == instruction->R.opcode) {
+      fp = R_opcode_func_map[i].fp;
+      break;
+    }
+  }
 }
 
-static void parse_I_format(instruction_t* instruction) {
-  printf("Hello, I instruction!\n");
-}
+static void parse_I_format(instruction_t* instruction) {}
 
 static const struct {
   instruction_format_t format;
