@@ -1,5 +1,6 @@
 #include "instruction_impl.h"
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -46,11 +47,6 @@ void EORI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate){
 
 void SUBI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate){
     X[Rd] = X[Rn] - ALU_immediate;
-}
-
-
-void LDUR(uint64_t *X, uint64_t *stack, uint8_t Rd, uint8_t address, uint16_t offset){
-  X[Rd] = stack[address + (offset / 8)];
 }
 
 /* ---------- B instructions ---------- */
