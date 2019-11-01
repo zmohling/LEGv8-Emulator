@@ -18,6 +18,40 @@
 #define OPCODE_EORI 0b1101001000
 #define OPCODE_HALT 0b11111111111
 #define OPCODE_LDUR 0b11111000010
+#define OPCODE_LDURB 0b00111000010
+#define OPCODE_LDURH 0b01111000010
+#define OPCODE_LDURSW 0b10111000100
+#define OPCODE_LSL 0b11010011011
+#define OPCODE_LSR 0b11010011010
+#define OPCODE_MUL 0b10011011000
+#define OPCODE_ORR 0b10101010000
+#define OPCODE_ORRI 0b1011001000
+#define OPCODE_PRNL 0b11111111100
+#define OPCODE_PRNT 0b1111111101
+#define OPCODE_SDIV 0b10011010110
+#define OPCODE_SMULH 0b10011011010
+#define OPCODE_STUR 0b11111000000
+#define OPCODE_STURB 0b00111000000
+#define OPCODE_STURH 0b01111000000
+#define OPCODE_STURW 0b10111000000
+#define OPCODE_SUB 0b11001011000
+#define OPCODE_SUBI 0b1101000100
+#define OPCODE_SUBIS 0b1111000100
+#define OPCODE_SUBS 0b11101011000
+#define OPCODE_UDIV 0b10011010110
+#define OPCODE_UMULH 0b10011011110
+
+extern const uint32_t opcodes[37];
+
+typedef enum instruction_format {
+  format_ERR,
+  format_R,
+  format_I,
+  format_D,
+  format_B,
+  format_CB,
+  format_IW
+} instruction_format_t;
 
 typedef struct r_format {
   uint16_t opcode : 11;
@@ -59,13 +93,15 @@ typedef struct iw_format {
   uint8_t Rd : 5;
 } iw_format_t;
 
-union instruction_formats {
+union instruction {
   r_format_t r;
   i_format_t i;
   d_format_t d;
   b_format_t b;
   cb_format_t cb;
   iw_format_t iw;
-} instruction;
+};
+
+union instruction parse(uint32_t* word);
 
 #endif

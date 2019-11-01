@@ -2,7 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "debug.h"
 #include "instruction_impl.h"
+#include "parser.h"
 #include "reader.h"
 
 #define MAIN_MEMORY_SIZE    512
@@ -27,6 +29,8 @@ char* DEBUG_bits(uint32_t num) {
   }
 
   return bits;
+void usage() {
+  printf("USAGE: ./legv8emul <assembled legv8asm .machine file>\n");
 }
 
 int main(int argc, char* argv[]) {
@@ -37,10 +41,12 @@ int main(int argc, char* argv[]) {
   instructions = read_instructions(argv[1]);
 
 #ifdef DEBUG_MODE
-  // Print bits of each instruction
-  for (int i = 0; instructions[i]; i++) {
-    printf("%s\n", DEBUG_bits(instructions[i]));
-  }
+    // Print bits of each instruction
+    for (int i = 0; instructions[i]; i++) {
+      printf("%s\n", DEBUG_bits(instructions[i]));
+      parse(&instructions[i]);
+    }
+
 #endif
 
   } else {
