@@ -6,34 +6,53 @@
 #include <string.h>
 #include <stdio.h>
 
-void ADD(uint64_t *X, uint8_t dest, uint8_t source1, uint8_t source2);
+/* R instructions */
+void ADD(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
-void ADDI(uint64_t *X, uint8_t dest, uint8_t source, uint64_t immediate);
+void AND(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
-void AND(uint64_t *X, uint8_t dest, uint8_t source1, uint8_t source2);
+void EOR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
-void ANDI(uint64_t *X, uint8_t dest, uint8_t source, uint64_t immediate);
+void SUB(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
+void UDIV(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+
+void UMULH(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+
+void BR();
+
+/* I instructions */
+void ADDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+
+void ANDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+
+void EORI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+
+void SUBI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+
+/* B instructions */
 void B();
-
-uint8_t B_cond(uint64_t *X, uint8_t extention);
 
 void BL();
 
-void BR();
+/* CB instructions */
+uint8_t B_cond(uint64_t *X, uint8_t extention);
 
 void CBNZ();
 
 void CBZ();
 
-void EOR(uint64_t *X, uint8_t dest, uint8_t source1, uint8_t source2);
+/* D instructions */
+void LDUR(uint64_t *X, uint64_t *stack, uint8_t Rd, uint8_t address, uint16_t offset);
 
-void EORI(uint64_t *X, uint8_t dest, uint8_t source, uint64_t immediate);
 
-void HALT();
+/* custom instructions */
+void HALT(uint64_t *X, size_t reg_length, uint64_t *stack, size_t stack_length);
 
-void LDUR(uint64_t *X, uint64_t *stack, uint8_t dest, uint8_t address, uint16_t offset);
+void DUMP(uint64_t *X, size_t reg_length, uint64_t *stack, size_t stack_length);
 
-void DUMP(uint64_t *X, size_t main_length, uint64_t *stack, size_t stack_length);
+void PRNL();
+
+void PRNT(uint64_t *X, uint8_t reg);
 
 #endif
