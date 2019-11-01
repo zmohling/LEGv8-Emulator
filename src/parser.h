@@ -41,6 +41,18 @@
 #define OPCODE_UDIV 0b10011010110
 #define OPCODE_UMULH 0b10011011110
 
+extern const uint32_t opcodes[37];
+
+typedef enum instruction_format {
+  format_ERR,
+  format_R,
+  format_I,
+  format_D,
+  format_B,
+  format_CB,
+  format_IW
+} instruction_format_t;
+
 typedef struct r_format {
   uint16_t opcode : 11;
   uint8_t Rm : 5;
@@ -89,16 +101,6 @@ union instruction {
   cb_format_t cb;
   iw_format_t iw;
 };
-
-typedef enum instruction_format {
-  format_NA,
-  format_R,
-  format_I,
-  format_D,
-  format_B,
-  format_CB,
-  format_IW
-} instruction_format_t;
 
 union instruction parse(uint32_t* word);
 
