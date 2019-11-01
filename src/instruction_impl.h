@@ -6,6 +6,13 @@
 #include <string.h>
 #include <stdio.h>
 
+#define PC    16
+#define IP1   17
+#define SP    28
+#define FP    29
+#define LR    30
+#define XZR   31
+
 /* R instructions */
 void ADD(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
@@ -13,13 +20,15 @@ void AND(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
 void EOR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
+void ORR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+
 void SUB(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
 void UDIV(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
 void UMULH(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
-void BR();
+void BR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
 /* I instructions */
 void ADDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
@@ -28,12 +37,14 @@ void ANDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
 
 void EORI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
 
+void ORRI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+
 void SUBI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
 
 /* B instructions */
-void B();
+void B(uint64_t *X, uint32_t BR_address);
 
-void BL();
+void BL(uint64_t *X, uint32_t BR_address);
 
 /* CB instructions */
 uint8_t B_cond(uint64_t *X, uint8_t extention);

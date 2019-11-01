@@ -13,6 +13,7 @@
 
 uint64_t X[REG_SIZE];             // registers
 uint64_t stack[STACK_SIZE];       // stack
+uint64_t main_mem[512];           // main memory
 uint32_t* instructions;           // all instructions
 
 /*

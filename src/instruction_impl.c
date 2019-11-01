@@ -19,16 +19,24 @@ void EOR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
   X[Rd] = X[Rn] ^ X[Rm];
 }
 
+void ORR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
+  X[Rd] = X[Rn] | X[Rm];
+}
+
 void SUB(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
-    X[Rd] = X[Rn] - X[Rm];
+  X[Rd] = X[Rn] - X[Rm];
 }
 
 void UDIV(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
-    X[Rd] = X[Rn] / X[Rm];
+  X[Rd] = X[Rn] / X[Rm];
 }
 
 void UMULH(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
-    X[Rd] = X[Rn] * X[Rm];
+  X[Rd] = X[Rn] * X[Rm];
+}
+
+void BR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd){
+  X[PC] = X[Rd];
 }
 
 /* ---------- I instructions ---------- */
@@ -45,11 +53,24 @@ void EORI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate){
   X[Rd] = X[Rn] ^ X[ALU_immediate];
 }
 
+void ORRI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate){
+  X[Rd] = X[Rn] | ALU_immediate;
+}
+
 void SUBI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate){
-    X[Rd] = X[Rn] - ALU_immediate;
+  X[Rd] = X[Rn] - ALU_immediate;
 }
 
 /* ---------- B instructions ---------- */
+
+void B(uint64_t *X, uint32_t BR_address){
+  X[PC] = X[PC] + (BR_address * 4);
+}
+
+void BL(uint64_t *X, uint32_t BR_address){
+  X[LR] = X[PC] + (1 * 4);
+  X[PC] = X[PC] + (BR_address * 4);
+}
 
 /* ---------- CB instructions --------- */
 
@@ -120,7 +141,7 @@ void DUMP(uint64_t *X, size_t main_length, uint64_t *stack, size_t stack_length)
   char* reg_name = "   ";
   for(int i = 0; i < 32; i++){
     switch(i){
-      case 16: reg_name = "(IP0)";
+      case 16: reg_name = "(PC)";
         break;
       case 17: reg_name = "(IP1)";
         break;
@@ -145,14 +166,14 @@ void DUMP(uint64_t *X, size_t main_length, uint64_t *stack, size_t stack_length)
 }
 
 void HALT(uint64_t *X, size_t main_length, uint64_t *stack, size_t stack_length){
-    DUMP(X, main_length, stack, stack_length);
-    exit(-1);
+  DUMP(X, main_length, stack, stack_length);
+  exit(-1);
 }
 
 void PRNL(){
-    printf("\n");
+  printf("\n");
 }
 
 void PRNT(uint64_t *X, uint8_t reg){
-    printf("X%02d: 0x%016lx (%d)\n", reg, X[reg], (int)X[reg]);
+  printf("X%02d: 0x%016lx (%d)\n", reg, X[reg], (int)X[reg]);
 }

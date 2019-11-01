@@ -3,7 +3,3 @@ loop1:
   ADD X9, X9, X9
   LDUR X9, [SP, #12]
   B loop1
-
-Rt: 01001: 9
-Rn: 11100: 28
-DT_address: 12
