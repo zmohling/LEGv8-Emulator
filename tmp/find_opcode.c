@@ -85,8 +85,25 @@ uint32_t call_opcode(uint32_t instruction) {
     return OPCODE_STURB;
 
   default:
-    opcode = opcode >> 1;
+    opcode = opcode >> 2;
     break;
+<<<<<<< HEAD
+  }
+  }
+
+  if (!found) {
+  switch(opcode) {
+  case 000101:
+    found = 1;
+    B();
+    break;
+
+  case 100101:
+    found = 1;
+    BL();
+    break;
+  }
+=======
 }
   switch(opcode) {
   case OPCODE_PRNT:
@@ -136,6 +153,7 @@ uint32_t call_opcode(uint32_t instruction) {
     
   case OPCODE_BL:
     return OPCODE_BL;
+>>>>>>> 6efbd214ff17b86817522e777a4ffead9fb00e97
   }
   exit(-1);
 }
