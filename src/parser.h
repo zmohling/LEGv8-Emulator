@@ -48,10 +48,8 @@
 
 typedef struct instruction instruction_t;
 
-typedef void instruction_func_t(uint64_t *, instruction_t *);
-
 typedef struct instruction {
-  instruction_func_t *func_ptr;
+  void (*instruction_func)(uint64_t *, instruction_t *);
   union {
     uint32_t word;
 
@@ -112,7 +110,7 @@ typedef enum instruction_format {
 struct instruction_map {
   const uint32_t opcode;
   const instruction_format_t format;
-  instruction_func_t *func_ptr;
+  void (*instruction_func)(uint64_t *, instruction_t *);
 };
 
 extern const uint32_t opcodes[];
@@ -124,7 +122,7 @@ typedef struct node node_t;
 typedef struct node {
   node_t *left, *right;
   unsigned data : 1;
-  instruction_func_t *func_ptr;
+  void (*instruction_func)(uint64_t *, instruction_t *);
 } node_t;
 
 /*

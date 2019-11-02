@@ -34,8 +34,12 @@ int main(int argc, char* argv[]) {
     // Print bits of each instruction
     for (int i = 0; instructions[i]; i++) {
       printf("%s\n", DEBUG_bits(instructions[i]));
+
+      /* Parse Instruction */
       instruction_t instruction = parse(&instructions[i]);
-      // instruction.func_ptr(X, &instruction);
+
+      /* Execute Instruction */
+      instruction.instruction_func(X, &instruction);
     }
 
 #endif

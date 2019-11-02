@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "debug.h"
 #include "instruction_impl.h"
@@ -38,7 +39,7 @@ static opcode_tree_t* create_opcode_tree() {
   tree->root = malloc(1 * sizeof(node_t));
   tree->root->left = NULL;
   tree->root->right = NULL;
-  tree->root->func_ptr = NULL;
+  tree->root->instruction_func = NULL;
 
   for (int i = 0; i < NUM_OPCODES; i++) {
     instruction_format_t format = opcode_map[i].format;
@@ -58,9 +59,9 @@ static opcode_tree_t* create_opcode_tree() {
         new_node->right = NULL;
 
         if (j == (opcode_size_format_map[format] - 1)) {
-          new_node->func_ptr = opcode_map[i].func_ptr;
+          new_node->instruction_func = opcode_map[i].instruction_func;
         } else {
-          new_node->func_ptr = NULL;
+          new_node->instruction_func = NULL;
         }
 
         if (val == 0) {
@@ -95,9 +96,9 @@ instruction_t parse(uint32_t* word) {
   opcode_tree_t* tree = create_opcode_tree();
   node_t* n = tree->root;
 
-  for (int i = 0; n != NULL;) {
-    if (n->func_ptr != NULL) {
-      instruction.func_ptr = n->func_ptr;
+  for (int i = 0; n != NULL; i++) {
+    if (n->instruction_func) {
+      instruction.instruction_func = n->instruction_func;
       break;
     }
 
@@ -109,7 +110,7 @@ instruction_t parse(uint32_t* word) {
       n = n->right;
   }
 
-  // free_opcode_tree(tree);
+  free_opcode_tree(tree);
 
   return instruction;
 }

@@ -41,9 +41,15 @@ void set_all_flags(int s) {
 
 /* ---------- R instructions ---------- */
 
-void ADDD(uint64_t *X, instruction_t *i) { printf("ADDD\n"); }
+void ADDD(uint64_t *X, instruction_t *instr) {
+  printf("ADD Rm: %u, shamt: %u, Rn: %u, Rd: %u\n", instr->R.Rm, instr->R.shamt,
+         instr->R.Rn, instr->R.Rd);
+}
 
-void ADDDI(uint64_t *X, instruction_t *i) { printf("ADDDI\n"); }
+void ADDDI(uint64_t *X, instruction_t *instr) {
+  printf("ADDI ALU_immediate: %u, Rn: %u, Rd: %u\n", instr->I.ALU_immediate,
+         instr->I.Rn, instr->I.Rd);
+}
 
 void ADD(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
   X[Rd] = X[Rn] + X[Rm];
