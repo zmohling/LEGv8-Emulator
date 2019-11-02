@@ -2,10 +2,12 @@
 #define INSTRUCTION_IMPL_H_
 
 #include <stdint.h>
-#include <stdint.h>
-#include <string.h>
 #include <stdio.h>
+#include <string.h>
 
+#include "parser.h"
+
+// clang-format off
 #define PC    16
 #define IP1   17
 #define SP    28
@@ -28,9 +30,14 @@
 #define GT    12
 #define LE    13
 #define FLAGS_LENGTH 14
+// clang-format on
 
 /* R instructions */
 void ADD(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+
+void ADDD(uint64_t *X, instruction_t *);
+
+void ADDDI(uint64_t *X, instruction_t *);
 
 void AND(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
 
@@ -74,8 +81,8 @@ void CBNZ();
 void CBZ();
 
 /* D instructions */
-void LDUR(uint64_t *X, uint64_t *stack, uint8_t Rd, uint8_t address, uint16_t offset);
-
+void LDUR(uint64_t *X, uint64_t *stack, uint8_t Rd, uint8_t address,
+          uint16_t offset);
 
 /* custom instructions */
 void HALT(uint64_t *X, size_t reg_length, uint64_t *stack, size_t stack_length);
