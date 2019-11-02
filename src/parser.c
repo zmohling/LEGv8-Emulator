@@ -7,9 +7,9 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "debug.h"
 #include "instruction_impl.h"
 
+/* Struct to map opcode its format type and function implementation. */
 const struct instruction_map opcode_map[] = {
     {OPCODE_ADD, format_R, ADDD}, {OPCODE_ADDI, format_I, ADDDI},
     {OPCODE_AND, format_R},       {OPCODE_ANDI, format_I},
@@ -31,11 +31,16 @@ const struct instruction_map opcode_map[] = {
     {OPCODE_SUBS, format_R},      {OPCODE_UDIV, format_R},
     {OPCODE_UMULH, format_R}};
 
+/* Mapping of format type to its opcode size */
 static const uint32_t opcode_size_format_map[] = {0, 11, 10, 11, 6, 8, 9};
 
+/* Initalizes a tree-like data structure where each bit of an instruction's
+ * opcode in a node. A node can have at most two children, left and right, or 0
+ * and 1, respectively. */
 static opcode_tree_t* create_opcode_tree() {
   opcode_tree_t* tree = malloc(1 * sizeof(opcode_tree_t));
 
+  /* Root node is trivial */
   tree->root = malloc(1 * sizeof(node_t));
   tree->root->left = NULL;
   tree->root->right = NULL;
@@ -46,11 +51,16 @@ static opcode_tree_t* create_opcode_tree() {
 
     node_t* n = tree->root;
 
+    /* Iterate through the implemented instruction's opcodes and insert each
+     * subsequent bit (MSB->LSB) into the tree. */
     for (int j = 0; j < opcode_size_format_map[format]; j++) {
       if (n == NULL) break;
 
+      /* Bitwise AND operation on the MSB. If nonzero, the respective bit was a
+       * 1, otherwise it was a 0. */
       uint32_t val = (((opcode_map[i].opcode << j) & INT_MIN) == 0) ? 0 : 1;
 
+      /* Create new node if not exists */
       if (((n->left == NULL) && (val == 0)) ||
           ((n->right == NULL) && (val != 0))) {
         node_t* new_node = malloc(1 * sizeof(node_t));
@@ -58,6 +68,10 @@ static opcode_tree_t* create_opcode_tree() {
         new_node->left = NULL;
         new_node->right = NULL;
 
+        /* Since no opcode can be a prefix
+         * of another, every leaf node signifies the last bit of some opcode.
+         * These leaf nodes must be assigned a pointer to the function which
+         * implements its functionality. */
         if (j == (opcode_size_format_map[format] - 1)) {
           new_node->instruction_func = opcode_map[i].instruction_func;
         } else {
@@ -96,6 +110,7 @@ instruction_t parse(uint32_t* word) {
   opcode_tree_t* tree = create_opcode_tree();
   node_t* n = tree->root;
 
+  /* Traverse the tree until we match our opcode */
   for (int i = 0; n != NULL; i++) {
     if (n->instruction_func) {
       instruction.instruction_func = n->instruction_func;
