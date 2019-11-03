@@ -34,17 +34,24 @@ const struct instruction_map opcode_map[] = {
 /* Mapping of format type to its opcode size */
 static const uint32_t opcode_size_format_map[] = {0, 11, 10, 11, 6, 8, 9};
 
+node_t* create_new_node() {
+  node_t* n = malloc(1 * sizeof(node_t));
+
+  n->left = NULL;
+  n->right = NULL;
+  n->instruction_func = NULL;
+
+  return n;
+}
+
 /* Initalizes a tree-like data structure where each bit of an instruction's
  * opcode in a node. A node can have at most two children, left and right, or 0
  * and 1, respectively. */
 static opcode_tree_t* create_opcode_tree() {
   opcode_tree_t* tree = malloc(1 * sizeof(opcode_tree_t));
 
-  /* Root node is trivial */
-  tree->root = malloc(1 * sizeof(node_t));
-  tree->root->left = NULL;
-  tree->root->right = NULL;
-  tree->root->instruction_func = NULL;
+  /* Initialize trival root node */
+  tree->root = create_new_node();
 
   for (int i = 0; i < NUM_OPCODES; i++) {
     instruction_format_t format = opcode_map[i].format;
@@ -63,21 +70,16 @@ static opcode_tree_t* create_opcode_tree() {
       /* Create new node if not exists */
       if (((n->left == NULL) && (val == 0)) ||
           ((n->right == NULL) && (val != 0))) {
-        node_t* new_node = malloc(1 * sizeof(node_t));
-        new_node->data = val;
-        new_node->left = NULL;
-        new_node->right = NULL;
+        node_t* new_node = create_new_node();
 
-        /* Since no opcode can be a prefix
-         * of another, every leaf node signifies the last bit of some opcode.
-         * These leaf nodes must be assigned a pointer to the function which
-         * implements its functionality. */
+        /* Since no opcode can be a prefix of another, every leaf node signifies
+         * the last bit of some opcode. These leaf nodes must be assigned a
+         * pointer to the function which implements its functionality. */
         if (j == (opcode_size_format_map[format] - 1)) {
           new_node->instruction_func = opcode_map[i].instruction_func;
-        } else {
-          new_node->instruction_func = NULL;
         }
 
+        /* Update pointers to new node */
         if (val == 0) {
           n->left = new_node;
         } else {
@@ -88,7 +90,6 @@ static opcode_tree_t* create_opcode_tree() {
       n = (val == 0) ? n->left : n->right;
     }
   }
-
   return tree;
 }
 
