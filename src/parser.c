@@ -1,11 +1,8 @@
 #include "parser.h"
 
-#include <errno.h>
 #include <limits.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 
 #include "instruction_impl.h"
 
@@ -34,7 +31,7 @@ const struct instruction_map opcode_map[] = {
 /* Mapping of format type to its opcode size */
 static const uint32_t opcode_size_format_map[] = {0, 11, 10, 11, 6, 8, 9};
 
-node_t* create_new_node() {
+static node_t* create_new_node() {
   node_t* n = malloc(1 * sizeof(node_t));
 
   n->left = NULL;
@@ -94,8 +91,8 @@ static opcode_tree_t* create_opcode_tree() {
 }
 
 static void free_opcode_tree_rec(node_t* head) {
-  if (head != NULL && head->left != NULL) free(head->left);
-  if (head != NULL && head->right != NULL) free(head->right);
+  if (head != NULL && head->left != NULL) free_opcode_tree_rec(head->left);
+  if (head != NULL && head->right != NULL) free_opcode_tree_rec(head->right);
   if (head != NULL) free(head);
 }
 

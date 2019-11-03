@@ -47,12 +47,14 @@
 #define NUM_OPCODES 37
 
 typedef struct instruction instruction_t;
-
 typedef struct instruction {
+  /* The implementaion function */
   void (*instruction_func)(uint64_t *, instruction_t *);
+
   union {
     uint32_t word;
 
+    /* Schemas of different instruction formats */
     union {
       struct {
         uint32_t Rd : 5;
@@ -113,11 +115,7 @@ struct instruction_map {
   void (*instruction_func)(uint64_t *, instruction_t *);
 };
 
-extern const uint32_t opcodes[];
-
-/*
- * Opcode tree node
- */
+/* Opcode tree node */
 typedef struct node node_t;
 typedef struct node {
   node_t *left, *right;
@@ -125,14 +123,13 @@ typedef struct node {
   void (*instruction_func)(uint64_t *, instruction_t *);
 } node_t;
 
-/*
- * Tree structure to detect opcodes and
- * map to respective instruction function.
- */
+/* Tree structure to detect opcodes and map to respective implementation
+ * function.*/
 typedef struct opcode_tree {
   node_t *root;
 } opcode_tree_t;
 
+/* Parses a word into the instruction_t structure */
 instruction_t parse(uint32_t *word);
 
 #endif
