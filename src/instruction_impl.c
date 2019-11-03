@@ -51,93 +51,97 @@ void ADDDI(uint64_t *X, instruction_t *instr) {
          instr->I.Rn, instr->I.Rd);
 }
 
-void ADD(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  X[Rd] = X[Rn] + X[Rm];
+void ADD(uint64_t *X, instruction_t *instr) {
+  X[instr->R.Rd] = X[instr->R.Rn] + X[instr->R.Rm];
 }
 
-void AND(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  X[Rd] = X[Rn] & X[Rm];
+void AND(uint64_t *X, instruction_t *instr) {
+  X[instr->R.Rd] = X[instr->R.Rn] & X[instr->R.Rm];
 }
 
-void EOR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  X[Rd] = X[Rn] ^ X[Rm];
+void EOR(uint64_t *X, instruction_t *instr) {
+  X[instr->R.Rd] = X[instr->R.Rn] ^ X[instr->R.Rm];
 }
 
-void ORR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  X[Rd] = X[Rn] | X[Rm];
+void ORR(uint64_t *X, instruction_t *instr) {
+  X[instr->R.Rd] = X[instr->R.Rn] | X[instr->R.Rm];
 }
 
-void SUB(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  X[Rd] = X[Rn] - X[Rm];
+void SUB(uint64_t *X, instruction_t *instr) {
+  X[instr->R.Rd] = X[instr->R.Rn] - X[instr->R.Rm];
 }
 
-void UDIV(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  X[Rd] = X[Rn] / X[Rm];
+void UDIV(uint64_t *X, instruction_t *instr) {
+  X[instr->R.Rd] = X[instr->R.Rn] / X[instr->R.Rm];
 }
 
-void UMULH(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  X[Rd] = X[Rn] * X[Rm];
+void UMULH(uint64_t *X, instruction_t *instr) {
+  X[instr->R.Rd] = X[instr->R.Rn] * X[instr->R.Rm];
 }
 
-void BR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  X[PC] = X[Rd];
+void BR(uint64_t *X, instruction_t *instr) {
+  X[instr->R.PC] = X[instr->R.Rd];
 }
 
-void SUBS(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd) {
-  int s = (int)X[Rn] - (int)X[Rm];
+void SUBS(uint64_t *X, instruction_t *instr) {
+  int s = (int)X[instr->R.Rn] - (int)X[instr->R.Rm];
 
   set_all_flags(s);
 }
 
 /* ---------- I instructions ---------- */
 
-void ADDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate) {
-  X[Rd] = X[Rn] + ALU_immediate;
+void ADDI(uint64_t *X, instruction_t *instr) {
+  X[instr->I.Rd] = X[instr->I.Rn] + instr->I.ALU_immediate;
 }
 
-void ANDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate) {
-  X[Rd] = X[Rn] & ALU_immediate;
+void ANDI(uint64_t *X, instruction_t *instr) {
+  X[instr->I.Rd] = X[instr->I.Rn] & instr->I.ALU_immediate;
 }
 
-void EORI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate) {
-  X[Rd] = X[Rn] ^ X[ALU_immediate];
+void EORI(uint64_t *X, instruction_t *instr) {
+  X[instr->I.Rd] = X[instr->I.Rn] ^ instr->I.ALU_immediate;
 }
 
-void ORRI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate) {
-  X[Rd] = X[Rn] | ALU_immediate;
+void ORRI(uint64_t *X, instruction_t *instr) {
+  X[instr->I.Rd] = X[instr->I.Rn] | instr->I.ALU_immediate;
 }
 
-void SUBI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate) {
-  X[Rd] = X[Rn] - ALU_immediate;
+void SUBI(uint64_t *X, instruction_t *instr) {
+  X[instr->I.Rd] = X[instr->I.Rn] - instr->I.ALU_immediate;
 }
 
-void SUBIS(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate) {
-  int s = (int)X[Rn] - (int)ALU_immediate;
+void SUBIS(uint64_t *X, instruction_t *instr) {
+  int s = (int)X[instr->I.Rn] - (int)instr->I.ALU_immediate;
 
   set_all_flags(s);
 }
 
 /* ---------- B instructions ---------- */
 
-void B(uint64_t *X, uint32_t BR_address) { X[PC] = X[PC] + (BR_address * 4); }
+void B(uint64_t *X, instruction_t *instr) { 
+  X[PC] = X[PC] + (instr->B.BR_address * 4); 
+}
 
-void BL(uint64_t *X, uint32_t BR_address) {
+void BL(uint64_t *X, instruction_t *instr) {
   X[LR] = X[PC] + (1 * 4);
-  X[PC] = X[PC] + (BR_address * 4);
+  X[PC] = X[PC] + (instr->B.BR_address * 4);
 }
 
 /* ---------- CB instructions --------- */
 
-void B_cond(uint64_t *X, uint32_t COND_BR_address, uint8_t Rt) {}
+void B_cond(uint64_t *X, uint32_t COND_BR_address, uint8_t Rt) {
+  //TODO
+}
 
 /* ---------- D instructions ---------- */
 
-void LDUR(uint64_t *X, uint64_t *stack, uint8_t Rd, uint8_t address,
-          uint16_t offset) {
-  X[Rd] = stack[address + (offset / 8)];
+void LDUR(uint64_t *X, uint64_t *stack, instruction_t *instr) {
+  X[instr->D.Rd] = stack[instr->D.address + (instr->D.offset / 8)];
 }
 
 /* -------- Custom instructions ------- */
+//didn't change any of these to be based on instruction type
 
 char printable_char(uint8_t c) { return isprint(c) ? c : '.'; }
 
