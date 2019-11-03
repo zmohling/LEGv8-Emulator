@@ -87,9 +87,11 @@ static opcode_tree_t* create_opcode_tree() {
       n = (val == 0) ? n->left : n->right;
     }
   }
+  printf("Initalized opcode tree\n");
   return tree;
 }
 
+/*
 static void free_opcode_tree_rec(node_t* head) {
   if (head != NULL && head->left != NULL) free_opcode_tree_rec(head->left);
   if (head != NULL && head->right != NULL) free_opcode_tree_rec(head->right);
@@ -100,12 +102,15 @@ static void free_opcode_tree(opcode_tree_t* tree) {
   free_opcode_tree_rec(tree->root);
   free(tree);
 }
+*/
 
 instruction_t parse(uint32_t* word) {
+  static opcode_tree_t* tree;
+  if (tree == NULL) tree = create_opcode_tree();
+
   instruction_t instruction;
   instruction.word = *word;
 
-  opcode_tree_t* tree = create_opcode_tree();
   node_t* n = tree->root;
 
   /* Traverse the tree until we match our opcode */
@@ -123,7 +128,7 @@ instruction_t parse(uint32_t* word) {
       n = n->right;
   }
 
-  free_opcode_tree(tree);
+  // free_opcode_tree(tree);
 
   return instruction;
 }
