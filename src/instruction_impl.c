@@ -80,7 +80,7 @@ void UMULH(uint64_t *X, instruction_t *instr) {
 }
 
 void BR(uint64_t *X, instruction_t *instr) {
-  X[instr->R.PC] = X[instr->R.Rd];
+  X[PC] = X[instr->R.Rd];
 }
 
 void SUBS(uint64_t *X, instruction_t *instr) {
@@ -137,7 +137,7 @@ void B_cond(uint64_t *X, uint32_t COND_BR_address, uint8_t Rt) {
 /* ---------- D instructions ---------- */
 
 void LDUR(uint64_t *X, uint64_t *stack, instruction_t *instr) {
-  X[instr->D.Rd] = stack[instr->D.address + (instr->D.offset / 8)];
+  X[instr->D.Rt] = stack[instr->D.DT_address + (instr->D.Rn / 8)];
 }
 
 /* -------- Custom instructions ------- */

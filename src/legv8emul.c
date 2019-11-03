@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
   }
 
   for (int i = 0; i < 32; i++) {
-    ADDI(X, i, i, i * 10000);
+    //ADDI(X, i, i, i * 10000);
   }
   // ADDI(X, 9, 9, 1);
   // DUMP(X, REG_SIZE, stack, STACK_SIZE);

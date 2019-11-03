@@ -33,45 +33,45 @@
 // clang-format on
 
 /* R instructions */
-void ADD(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void ADD(uint64_t *X, instruction_t *);
 
 void ADDD(uint64_t *X, instruction_t *);
 
 void ADDDI(uint64_t *X, instruction_t *);
 
-void AND(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void AND(uint64_t *X, instruction_t *);
 
-void EOR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void EOR(uint64_t *X, instruction_t *);
 
-void ORR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void ORR(uint64_t *X, instruction_t *);
 
-void SUB(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void SUB(uint64_t *X, instruction_t *);
 
-void UDIV(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void UDIV(uint64_t *X, instruction_t *);
 
-void UMULH(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void UMULH(uint64_t *X, instruction_t *);
 
-void BR(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void BR(uint64_t *X, instruction_t *);
 
-void SUBS(uint64_t *X, uint8_t Rm, uint8_t shamt, uint8_t Rn, uint8_t Rd);
+void SUBS(uint64_t *X, instruction_t *);
 
 /* I instructions */
-void ADDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+void ADDI(uint64_t *X, instruction_t *);
 
-void ANDI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+void ANDI(uint64_t *X, instruction_t *);
 
-void EORI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+void EORI(uint64_t *X, instruction_t *);
 
-void ORRI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+void ORRI(uint64_t *X, instruction_t *);
 
-void SUBI(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+void SUBI(uint64_t *X, instruction_t *);
 
-void SUBIS(uint64_t *X, uint8_t Rd, uint8_t Rn, uint64_t ALU_immediate);
+void SUBIS(uint64_t *X, instruction_t *);
 
 /* B instructions */
-void B(uint64_t *X, uint32_t BR_address);
+void B(uint64_t *X, instruction_t *);
 
-void BL(uint64_t *X, uint32_t BR_address);
+void BL(uint64_t *X, instruction_t *);
 
 /* CB instructions */
 void B_cond(uint64_t *X, uint32_t COND_BR_address, uint8_t Rt);
@@ -81,8 +81,9 @@ void CBNZ();
 void CBZ();
 
 /* D instructions */
-void LDUR(uint64_t *X, uint64_t *stack, uint8_t Rd, uint8_t address,
-          uint16_t offset);
+void LDUR(uint64_t *X, uint64_t *stack, instruction_t *);
+
+//STUR()???
 
 /* custom instructions */
 void HALT(uint64_t *X, size_t reg_length, uint64_t *stack, size_t stack_length);
