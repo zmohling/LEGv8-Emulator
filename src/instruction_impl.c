@@ -136,9 +136,7 @@ void B_cond(uint64_t *X, uint32_t COND_BR_address, uint8_t Rt) {
 
 /* ---------- D instructions ---------- */
 
-void LDUR(uint64_t *X, uint64_t *stack, instruction_t *instr) {
-  X[instr->D.Rt] = stack[instr->D.DT_address + (instr->D.Rn / 8)];
-}
+
 
 /* -------- Custom instructions ------- */
 //didn't change any of these to be based on instruction type

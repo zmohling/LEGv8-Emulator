@@ -7,14 +7,14 @@
 #include "parser.h"
 #include "reader.h"
 
-#define MAIN_MEMORY_SIZE 512
-#define STACK_SIZE 64
+#define MAIN_MEMORY_SIZE 4096
+#define STACK_SIZE 512
 #define REG_SIZE 32
 
-uint64_t X[REG_SIZE];        // registers
-uint64_t stack[STACK_SIZE];  // stack
-uint64_t main_mem[512];      // main memory
-uint32_t* instructions;      // all instructions
+uint64_t X[REG_SIZE];                 // registers
+uint8_t stack[STACK_SIZE];            // stack
+uint8_t main_mem[MAIN_MEMORY_SIZE];   // main memory
+uint32_t* instructions;               // all instructions
 
 /*
 Print out the usage for this program

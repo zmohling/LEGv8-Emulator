@@ -81,7 +81,7 @@ void CBNZ();
 void CBZ();
 
 /* D instructions */
-void LDUR(uint64_t *X, uint64_t *stack, instruction_t *);
+void LDUR(uint64_t *X, uint8_t *stack, instruction_t *);
 
 //STUR()???
 
