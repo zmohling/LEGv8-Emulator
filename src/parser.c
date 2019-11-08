@@ -1,6 +1,5 @@
 #include "parser.h"
 
-#include <limits.h>
 #include <stdint.h>
 #include <stdlib.h>
 
@@ -62,7 +61,7 @@ static opcode_tree_t* create_opcode_tree() {
 
       /* Bitwise AND operation on the MSB. If nonzero, the respective bit was a
        * 1, otherwise it was a 0. */
-      uint32_t val = (((opcode_map[i].opcode << j) & INT_MIN) == 0) ? 0 : 1;
+      uint32_t val = (((opcode_map[i].opcode << j) & (1 << 31)) == 0) ? 0 : 1;
 
       /* Create new node if not exists */
       if (((n->left == NULL) && (val == 0)) ||
@@ -87,7 +86,6 @@ static opcode_tree_t* create_opcode_tree() {
       n = (val == 0) ? n->left : n->right;
     }
   }
-  printf("Initalized opcode tree\n");
   return tree;
 }
 
@@ -120,7 +118,7 @@ instruction_t parse(uint32_t* word) {
       break;
     }
 
-    uint32_t val = (((instruction.word << i) & INT_MIN) == 0) ? 0 : 1;
+    uint32_t val = (((instruction.word << i) & (1 << 31)) == 0) ? 0 : 1;
 
     if (val == 0)
       n = n->left;
