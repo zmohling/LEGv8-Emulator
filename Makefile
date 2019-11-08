@@ -58,7 +58,7 @@ $(BUILD_DIR)/%.o: $(SRC_SUB_DIRS)%.c | $(BUILD_DIR)
 .PHONY: clean lint install uninstall
 clean:
 	@$(ECHO) Removing all generated files and executables...
-	@$(RM) $(BUILD_DIR) $(BIN) *.txt *.mp4 core vgcore.* valgrind*
+	@$(RM) $(BUILD_DIR) $(BIN) *.txt *.mp4 core vgcore.* valgrind* *.tar.gz
 
 install:
 	@$(ECHO) "Installing to $(DEST_DIR)$(INSTALL_DIR)"

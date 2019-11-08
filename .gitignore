@@ -1,3 +1,4 @@
 .vscode/
 build/
 legv8emul
+*.tar.gz
