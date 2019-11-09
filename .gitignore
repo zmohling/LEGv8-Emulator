@@ -2,3 +2,4 @@
 build/
 legv8emul
 *.tar.gz
+*.DS_store
