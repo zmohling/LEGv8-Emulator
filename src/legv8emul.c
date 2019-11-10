@@ -51,7 +51,7 @@ int main(int argc, char* argv[]) {
       instruction_t instruction = parse(&machine_state.instructions[i]);
 
       /* Log and analyze */
-      //analyze_instruction(&instruction);
+      analyze_instruction(&instruction);
 
       /* Execute Instruction */
       instruction.instruction_func(&machine_state, &instruction);
@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
   DUMP(&machine_state, NULL);
 
   /* Print metrics */
-  //print_statistics();
+  print_statistics();
 
   return 0;
 }

@@ -1,0 +1,13 @@
+SUB X2, X1, X3
+AND X12, X2, X5
+ORR X13, X6, X2
+ADD X14, X2, X2
+STUR X15, [X2, #100]
+
+Pipelined
+     1   2   3   4   5   6   7   8   9   10
+SUB  IF  REG EX  MEM WB
+AND              IF  REG EX  MEM WB
+ORR                  IF  REG EX  MEM WB
+ADD                      IF  REG EX  MEM WB
+STUR                         IF  REG EX  MEM WB

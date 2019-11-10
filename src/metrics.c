@@ -27,17 +27,28 @@ static void handle_data_hazard(instruction_t* instr) {
     if ((reg_write) && (prev_instr->R.Rd != 31) &&
         ((prev_instr->R.Rd == instr->R.Rn) ||
          (prev_instr->R.Rd == instr->R.Rm))) {
-      num_cycles_pipelined += 2;
-      num_cycles_pipelined_with_bypassing += (2 - i);
+      if (prev_instr->instruction_func == LDUR) {
+        num_cycles_pipelined += (2 - i);
+        num_cycles_pipelined_with_bypassing += (1 - i);
+      } else {
+        num_cycles_pipelined += (2 - i);
+      }
+
       num_data_hazards++;
     }
   }
 
-  num_cycles_pipelined++;
-  num_cycles_pipelined_with_bypassing++;
-
   mem = ex;
   ex = *instr;
+}
+
+static void handle_control_hazard(instruction_t* instr) {
+  if (instr->format == format_CB) {
+    num_cycles_pipelined += 3;
+    num_cycles_pipelined_with_bypassing += 3;
+
+    num_control_hazards++;
+  }
 }
 
 void analyze_instruction(instruction_t* instr) {
@@ -46,6 +57,10 @@ void analyze_instruction(instruction_t* instr) {
 
   /* Pipelined */
   handle_data_hazard(instr);
+  handle_control_hazard(instr);
+
+  num_cycles_pipelined++;
+  num_cycles_pipelined_with_bypassing++;
 }
 
 void print_statistics() {
