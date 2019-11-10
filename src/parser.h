@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+
 #include "legv8emul.h"
 
 // clang-format off
@@ -47,10 +48,23 @@
 
 #define NUM_OPCODES 37
 
+typedef enum instruction_format {
+  format_ERR,
+  format_R,
+  format_I,
+  format_D,
+  format_B,
+  format_CB,
+  format_IW
+} instruction_format_t;
+
 typedef struct instruction instruction_t;
 typedef struct instruction {
   /* The implementaion function */
   void (*instruction_func)(machine_state_t *, instruction_t *);
+
+  /* The instruction format */
+  instruction_format_t format;
 
   union {
     uint32_t word;
@@ -99,16 +113,6 @@ typedef struct instruction {
     };
   };
 } instruction_t;
-
-typedef enum instruction_format {
-  format_ERR,
-  format_R,
-  format_I,
-  format_D,
-  format_B,
-  format_CB,
-  format_IW
-} instruction_format_t;
 
 struct instruction_map {
   const uint32_t opcode;

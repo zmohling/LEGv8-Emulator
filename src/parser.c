@@ -7,24 +7,24 @@
 
 /* Struct to map opcode its format type and function implementation. */
 const struct instruction_map opcode_map[] = {
-    {OPCODE_ADD, format_R, ADD}, {OPCODE_ADDI, format_I, ADDI},
-    {OPCODE_AND, format_R, AND},       {OPCODE_ANDI, format_I, ANDI},
-    {OPCODE_B, format_B, B},         {OPCODE_B_COND, format_CB, B_COND},
-    {OPCODE_BL, format_B, BL},        {OPCODE_BR, format_R, BR},
-    {OPCODE_CBNZ, format_CB, CBNZ},     {OPCODE_CBZ, format_CB, CBZ},
-    {OPCODE_DUMP, format_R, DUMP},      {OPCODE_EOR, format_R, EOR},
-    {OPCODE_EORI, format_I, EORI},      {OPCODE_HALT, format_R, HALT},
-    {OPCODE_LDUR, format_D, LDUR},      {OPCODE_LDURB, format_D},
-    {OPCODE_LDURH, format_D},     {OPCODE_LDURSW, format_D},
-    {OPCODE_LSL, format_R, LSL},       {OPCODE_LSR, format_R, LSR},
-    {OPCODE_MUL, format_R, MUL},       {OPCODE_ORR, format_R, ORR},
-    {OPCODE_ORRI, format_I, ORRI},      {OPCODE_PRNL, format_R, PRNL},
-    {OPCODE_PRNT, format_R, PRNT},      {OPCODE_SDIV, format_R},
-    {OPCODE_SMULH, format_R},     {OPCODE_STUR, format_D, STUR},
-    {OPCODE_STURB, format_D},     {OPCODE_STURH, format_D},
-    {OPCODE_STURW, format_D},     {OPCODE_SUB, format_R, SUB},
-    {OPCODE_SUBI, format_I, SUBI},      {OPCODE_SUBIS, format_I, SUBIS},
-    {OPCODE_SUBS, format_R, SUBS},      {OPCODE_UDIV, format_R, UDIV},
+    {OPCODE_ADD, format_R, ADD},    {OPCODE_ADDI, format_I, ADDI},
+    {OPCODE_AND, format_R, AND},    {OPCODE_ANDI, format_I, ANDI},
+    {OPCODE_B, format_B, B},        {OPCODE_B_COND, format_CB, B_COND},
+    {OPCODE_BL, format_B, BL},      {OPCODE_BR, format_R, BR},
+    {OPCODE_CBNZ, format_CB, CBNZ}, {OPCODE_CBZ, format_CB, CBZ},
+    {OPCODE_DUMP, format_R, DUMP},  {OPCODE_EOR, format_R, EOR},
+    {OPCODE_EORI, format_I, EORI},  {OPCODE_HALT, format_R, HALT},
+    {OPCODE_LDUR, format_D, LDUR},  {OPCODE_LDURB, format_D},
+    {OPCODE_LDURH, format_D},       {OPCODE_LDURSW, format_D},
+    {OPCODE_LSL, format_R, LSL},    {OPCODE_LSR, format_R, LSR},
+    {OPCODE_MUL, format_R, MUL},    {OPCODE_ORR, format_R, ORR},
+    {OPCODE_ORRI, format_I, ORRI},  {OPCODE_PRNL, format_R, PRNL},
+    {OPCODE_PRNT, format_R, PRNT},  {OPCODE_SDIV, format_R},
+    {OPCODE_SMULH, format_R},       {OPCODE_STUR, format_D, STUR},
+    {OPCODE_STURB, format_D},       {OPCODE_STURH, format_D},
+    {OPCODE_STURW, format_D},       {OPCODE_SUB, format_R, SUB},
+    {OPCODE_SUBI, format_I, SUBI},  {OPCODE_SUBIS, format_I, SUBIS},
+    {OPCODE_SUBS, format_R, SUBS},  {OPCODE_UDIV, format_R, UDIV},
     {OPCODE_UMULH, format_R}};
 
 /* Mapping of format type to its opcode size */
@@ -124,6 +124,14 @@ instruction_t parse(uint32_t* word) {
       n = n->left;
     else
       n = n->right;
+  }
+
+  /* Get format */
+  for (int i = 0; i < NUM_OPCODES; i++) {
+    if (opcode_map[i].instruction_func == instruction.instruction_func) {
+      instruction.format = opcode_map[i].format;
+      break;
+    }
   }
 
   // free_opcode_tree(tree);
