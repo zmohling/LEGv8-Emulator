@@ -1,11 +1,12 @@
 #include "instruction_impl.h"
-#include "legv8emul.h"
 
 #include <ctype.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#include "legv8emul.h"
 
 void set_all_flags(machine_state_t *machine_state, int s) {
   for (int i = 0; i < FLAGS_LENGTH; i++) {
@@ -41,34 +42,33 @@ void set_all_flags(machine_state_t *machine_state, int s) {
 /* ---------- R instructions ---------- */
 
 void ADD(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] + 
-                                    machine_state->X[instr->R.Rm];
+  machine_state->X[instr->R.Rd] =
+      machine_state->X[instr->R.Rn] + machine_state->X[instr->R.Rm];
 }
 
 void AND(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] & 
-                                    machine_state->X[instr->R.Rm];
+  machine_state->X[instr->R.Rd] =
+      machine_state->X[instr->R.Rn] & machine_state->X[instr->R.Rm];
 }
 
 void EOR(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] ^ 
-                                    machine_state->X[instr->R.Rm];
+  machine_state->X[instr->R.Rd] =
+      machine_state->X[instr->R.Rn] ^ machine_state->X[instr->R.Rm];
 }
 
 void ORR(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] | 
-                                    machine_state->X[instr->R.Rm];
+  machine_state->X[instr->R.Rd] =
+      machine_state->X[instr->R.Rn] | machine_state->X[instr->R.Rm];
 }
 
 void SUB(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] - 
-                                    machine_state->X[instr->R.Rm];
+  machine_state->X[instr->R.Rd] =
+      machine_state->X[instr->R.Rn] - machine_state->X[instr->R.Rm];
 }
 
 void UDIV(machine_state_t *machine_state, instruction_t *instr) {
-
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] / 
-                                    machine_state->X[instr->R.Rm];
+  machine_state->X[instr->R.Rd] =
+      machine_state->X[instr->R.Rn] / machine_state->X[instr->R.Rm];
 }
 
 void BR(machine_state_t *machine_state, instruction_t *instr) {
@@ -76,65 +76,68 @@ void BR(machine_state_t *machine_state, instruction_t *instr) {
 }
 
 void SUBS(machine_state_t *machine_state, instruction_t *instr) {
-  int s = (int)machine_state->X[instr->R.Rn] - (int)machine_state->X[instr->R.Rm];
-  if(instr->R.Rd != XZR){
-    machine_state->X[instr->R.Rd] = (uint64_t) s;
+  int s =
+      (int)machine_state->X[instr->R.Rn] - (int)machine_state->X[instr->R.Rm];
+  if (instr->R.Rd != XZR) {
+    machine_state->X[instr->R.Rd] = (uint64_t)s;
   }
   set_all_flags(machine_state, s);
 }
 
-void LSL(machine_state_t *machine_state, instruction_t *instr){
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn ] << instr->R.shamt;
+void LSL(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn]
+                                  << instr->R.shamt;
 }
 
-void LSR(machine_state_t *machine_state, instruction_t *instr){
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn ] >> instr->R.shamt;
+void LSR(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] =
+      machine_state->X[instr->R.Rn] >> instr->R.shamt;
 }
 
-void MUL(machine_state_t *machine_state, instruction_t *instr){
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn ] * 
-                                    machine_state->X[instr->R.Rm];
+void MUL(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] =
+      machine_state->X[instr->R.Rn] * machine_state->X[instr->R.Rm];
 }
 
 /* ---------- I instructions ---------- */
 
 void ADDI(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] + 
-                                    instr->I.ALU_immediate;
+  machine_state->X[instr->I.Rd] =
+      machine_state->X[instr->I.Rn] + instr->I.ALU_immediate;
 }
 
 void ANDI(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] & 
-                                    instr->I.ALU_immediate;
+  machine_state->X[instr->I.Rd] =
+      machine_state->X[instr->I.Rn] & instr->I.ALU_immediate;
 }
 
 void EORI(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] ^ 
-                                    instr->I.ALU_immediate;
+  machine_state->X[instr->I.Rd] =
+      machine_state->X[instr->I.Rn] ^ instr->I.ALU_immediate;
 }
 
 void ORRI(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] | 
-                                    instr->I.ALU_immediate;
+  machine_state->X[instr->I.Rd] =
+      machine_state->X[instr->I.Rn] | instr->I.ALU_immediate;
 }
 
 void SUBI(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] - 
-                                    instr->I.ALU_immediate;
+  machine_state->X[instr->I.Rd] =
+      machine_state->X[instr->I.Rn] - instr->I.ALU_immediate;
 }
 
 void SUBIS(machine_state_t *machine_state, instruction_t *instr) {
   int s = (int)machine_state->X[instr->I.Rn] - (int)instr->I.ALU_immediate;
-  if(instr->I.Rd != XZR){
-    machine_state->X[instr->I.Rd] = (uint64_t) s;
+  if (instr->I.Rd != XZR) {
+    machine_state->X[instr->I.Rd] = (uint64_t)s;
   }
   set_all_flags(machine_state, s);
 }
 
 /* ---------- B instructions ---------- */
 
-void B(machine_state_t *machine_state, instruction_t *instr) { 
-  machine_state->X[PC] = machine_state->X[PC] + (instr->B.BR_address * 4); 
+void B(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[PC] = machine_state->X[PC] + (instr->B.BR_address * 4);
 }
 
 void BL(machine_state_t *machine_state, instruction_t *instr) {
@@ -145,56 +148,64 @@ void BL(machine_state_t *machine_state, instruction_t *instr) {
 /* ---------- CB instructions --------- */
 
 void B_COND(machine_state_t *machine_state, instruction_t *instr) {
-  if(machine_state->FLAGS[instr->CB.Rt]){
-    machine_state->X[PC] = machine_state->X[PC] + (instr->CB.COND_BR_address * 4); 
+  if (machine_state->FLAGS[instr->CB.Rt]) {
+    machine_state->X[PC] =
+        machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
   }
 }
 
-void CBNZ(machine_state_t *machine_state, instruction_t *instr){
-  if(machine_state->X[instr->CB.Rt] != 0){
-    machine_state->X[PC] = machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
+void CBNZ(machine_state_t *machine_state, instruction_t *instr) {
+  if (machine_state->X[instr->CB.Rt] != 0) {
+    machine_state->X[PC] =
+        machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
   }
 }
 
-void CBZ(machine_state_t *machine_state, instruction_t *instr){
-  if(machine_state->X[instr->CB.Rt] == 0){
-    machine_state->X[PC] = machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
+void CBZ(machine_state_t *machine_state, instruction_t *instr) {
+  if (machine_state->X[instr->CB.Rt] == 0) {
+    machine_state->X[PC] =
+        machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
   }
 }
 
 /* ---------- D instructions ---------- */
 
-void LDUR(machine_state_t *machine_state, instruction_t *instr){
+void LDUR(machine_state_t *machine_state, instruction_t *instr) {
   uint64_t build_num = 0;
-  for(int i = 0; i < 8; i ++){
+  for (int i = 0; i < 8; i++) {
     build_num = build_num << 8;
-    if(instr->D.Rn == SP || instr->D.Rn == FP){
-      build_num = build_num | machine_state->stack[machine_state->X[instr->D.Rn] + 
-                                    instr->D.DT_address + i];
-    }else{
-      build_num = build_num | machine_state->main_mem[machine_state->X[instr->D.Rn] + 
-                                    instr->D.DT_address + i];
+    if (instr->D.Rn == SP || instr->D.Rn == FP) {
+      build_num =
+          build_num |
+          machine_state
+              ->stack[machine_state->X[instr->D.Rn] + instr->D.DT_address + i];
+    } else {
+      build_num =
+          build_num | machine_state->main_mem[machine_state->X[instr->D.Rn] +
+                                              instr->D.DT_address + i];
     }
   }
   machine_state->X[instr->D.Rt] = build_num;
 }
 
-void STUR(machine_state_t *machine_state, instruction_t *instr){
+void STUR(machine_state_t *machine_state, instruction_t *instr) {
   int shift = 0;
-  for(int i = 7; i >= 0; i--){
-    if(instr->D.Rn == SP || instr->D.Rn == FP){
-      machine_state->stack[machine_state->X[instr->D.Rn] + instr->D.DT_address + i] = 
-                            (uint8_t) (machine_state->X[instr->D.Rt] >> (shift * 8) & 0xff);
-    }else{
-      machine_state->main_mem[machine_state->X[instr->D.Rn] + instr->D.DT_address + i] = 
-                            (uint8_t) (machine_state->X[instr->D.Rt] >> (shift * 8) & 0xff);
+  for (int i = 7; i >= 0; i--) {
+    if (instr->D.Rn == SP || instr->D.Rn == FP) {
+      machine_state
+          ->stack[machine_state->X[instr->D.Rn] + instr->D.DT_address + i] =
+          (uint8_t)(machine_state->X[instr->D.Rt] >> (shift * 8) & 0xff);
+    } else {
+      machine_state
+          ->main_mem[machine_state->X[instr->D.Rn] + instr->D.DT_address + i] =
+          (uint8_t)(machine_state->X[instr->D.Rt] >> (shift * 8) & 0xff);
     }
     shift++;
   }
 }
 
 /* -------- Custom instructions ------- */
-//didn't change any of these to be based on instruction type
+// didn't change any of these to be based on instruction type
 
 char printable_char(uint8_t c) { return isprint(c) ? c : '.'; }
 
@@ -273,8 +284,8 @@ void DUMP(machine_state_t *machine_state, instruction_t *instr) {
       default:
         reg_name = "   ";
     }
-    printf("%6s X%02d: 0x%016lx (%d)\n", reg_name, i, machine_state->X[i], 
-          (int)machine_state->X[i]);
+    printf("%6s X%02d: 0x%016llx (%d)\n", reg_name, i, machine_state->X[i],
+           (int)machine_state->X[i]);
   }
 
   printf("\nStack:\n");
@@ -289,9 +300,11 @@ void HALT(machine_state_t *machine_state, instruction_t *instr) {
   exit(-1);
 }
 
-void PRNL(machine_state_t *machine_state, instruction_t *instr) { printf("\n"); }
+void PRNL(machine_state_t *machine_state, instruction_t *instr) {
+  printf("\n");
+}
 
 void PRNT(machine_state_t *machine_state, instruction_t *instr) {
-  printf("X%02d: 0x%016lx (%d)\n", instr->R.Rd, machine_state->X[instr->R.Rd], 
-          (int)machine_state->X[instr->R.Rd]);
+  printf("X%02d: 0x%016llx (%d)\n", instr->R.Rd, machine_state->X[instr->R.Rd],
+         (int)machine_state->X[instr->R.Rd]);
 }
