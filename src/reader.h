@@ -4,6 +4,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-uint32_t* read_instructions(const char* filepath);
+uint32_t* read_instructions(const char* filepath, unsigned long long*);
 
 #endif

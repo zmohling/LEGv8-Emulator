@@ -18,16 +18,21 @@ static unsigned int get_size(FILE* f) {
   return size;
 }
 
-uint32_t* read_instructions(const char* filepath) {
+uint32_t* read_instructions(const char* filepath,
+                            unsigned long long* num_instructions) {
   FILE* f = fopen(filepath, "rb");
-  int f_size = get_size(f) / 4;
+  *num_instructions = get_size(f) / 4;
 
-  uint32_t* instructions = malloc(f_size * sizeof(uint32_t));
+  uint32_t* instructions = malloc(*num_instructions * sizeof(uint32_t));
 
-  for (int i = 0; i < f_size; i++) {
+  clearerr(f);
+
+  for (int i = 0; i < *num_instructions; i++) {
     uint32_t big_endian_word;
 
     if (!fread(&big_endian_word, sizeof(uint32_t), 1, f)) {
+      if (feof(f)) break;
+
       fprintf(stderr, "Error (%d)\n", errno);
       exit(-1);
     }
