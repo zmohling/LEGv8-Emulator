@@ -62,10 +62,10 @@ int main(int argc, char* argv[]) {
     return 0;
   }
 
+  DUMP(&machine_state, NULL);
+
   /* Print metrics */
   print_statistics();
-
-  DUMP(&machine_state, NULL);
 
   return 0;
 }
