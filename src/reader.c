@@ -24,10 +24,17 @@ uint32_t* read_instructions(const char* filepath) {
 
   uint32_t* instructions = malloc(f_size * sizeof(uint32_t));
 
-  for (int i = 0; i < f_size; i++) {
+  clearerr(f);
+
+  for (int i = 0;; i++) {
     uint32_t big_endian_word;
 
     if (!fread(&big_endian_word, sizeof(uint32_t), 1, f)) {
+      if (feof(f)) {
+        instructions[i] = 0;
+        break;
+      }
+
       fprintf(stderr, "Error (%d)\n", errno);
       exit(-1);
     }
