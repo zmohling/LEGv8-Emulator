@@ -29,7 +29,9 @@ void setup(machine_state_t* machine_state) {
 int main(int argc, char* argv[]) {
   if (argc == 2) {
     setup(&machine_state);
-    machine_state.instructions = read_instructions(argv[1]);
+
+    unsigned long long num_instructions = 0;
+    machine_state.instructions = read_instructions(argv[1], &num_instructions);
 
 #ifdef DEBUG_MODE
 //    // Print bits of each instruction
@@ -44,7 +46,7 @@ int main(int argc, char* argv[]) {
 //    }
 #endif
 
-    for (int i = 0; machine_state.instructions[i]; i++) {
+    for (int i = 0; i < num_instructions; i++) {
       /* Parse Instruction */
       instruction_t instruction = parse(&machine_state.instructions[i]);
 
