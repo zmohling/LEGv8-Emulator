@@ -1,2 +1,18 @@
 README for LEGv8-Emulator Programming Assignment 2
 Authors: Kyle Marek, Zach Mohling, Griffin Stout
+
+Compilation and Testing Instructions
+
+- to compile the project, type 'make' in the directory with the makefile 
+  (LEGv8-Emulator/). This will compile and link all C files and headers, and 
+  will generate an executable binary called 'legv8emul'.
+
+- to test the compiled emulator, you will need to have previously assembled a
+  .legv8asm file using the legv8asm binary with the -a flag. This will produce
+  a '.legv8asm.machine' binary. Then, run the legv8emul binary with a single
+  argument: the binary file you just assembled. 
+
+- how to read the output: The default output of a completed run of the emulator
+  is a DUMP. This prints out a) the value of all registers in hex and base 10,
+  b) the state of the simulated stack, and c) the state of the simulated main 
+  memory at the end of the program. 
