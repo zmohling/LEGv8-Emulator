@@ -1,0 +1,2 @@
+ADDI X9, X9, #5
+ADD X10, X9, X9
