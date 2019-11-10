@@ -21,6 +21,7 @@ void setup(machine_state_t *machine_state){
   machine_state->X[SP] = STACK_SIZE;
   machine_state->X[FP] = STACK_SIZE;
   machine_state->X[XZR] = 0;
+  machine_state->X[PC] = 0;
 }
 
 int main(int argc, char* argv[]) {
@@ -50,9 +51,5 @@ int main(int argc, char* argv[]) {
 
   DUMP(&machine_state, NULL);
 
-  for(int i = 0; i < 8; i ++){
-    printf("%02hhx", machine_state.stack[504 + i]);
-  }
-  printf("\n");
   return 0;
 }
