@@ -1,2 +1,4 @@
-ADDI X9, X9, #1
-ADD X9, X9, X9
+SUBI X9, X9, #5
+SUBI SP, SP, #8
+STUR X9, [SP, #0]
+LDUR X8, [SP, #0]

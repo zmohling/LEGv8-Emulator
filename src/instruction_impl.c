@@ -76,20 +76,23 @@ void BR(machine_state_t *machine_state, instruction_t *instr) {
 
 void SUBS(machine_state_t *machine_state, instruction_t *instr) {
   int s = (int)machine_state->X[instr->R.Rn] - (int)machine_state->X[instr->R.Rm];
-
+  if(instr->R.Rd != XZR){
+    machine_state->X[instr->R.Rd] = (uint64_t) s;
+  }
   set_all_flags(machine_state, s);
 }
 
 void LSL(machine_state_t *machine_state, instruction_t *instr){
-
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn ] << instr->R.shamt;
 }
 
 void LSR(machine_state_t *machine_state, instruction_t *instr){
-
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn ] >> instr->R.shamt;
 }
 
 void MUL(machine_state_t *machine_state, instruction_t *instr){
-
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn ] * 
+                                    machine_state->X[instr->R.Rm];
 }
 
 /* ---------- I instructions ---------- */
@@ -121,6 +124,9 @@ void SUBI(machine_state_t *machine_state, instruction_t *instr) {
 
 void SUBIS(machine_state_t *machine_state, instruction_t *instr) {
   int s = (int)machine_state->X[instr->I.Rn] - (int)instr->I.ALU_immediate;
+  if(instr->I.Rd != XZR){
+    machine_state->X[instr->I.Rd] = (uint64_t) s;
+  }
   set_all_flags(machine_state, s);
 }
 
@@ -138,25 +144,52 @@ void BL(machine_state_t *machine_state, instruction_t *instr) {
 /* ---------- CB instructions --------- */
 
 void B_COND(machine_state_t *machine_state, instruction_t *instr) {
-  //TODO
+  if(machine_state->FLAGS[instr->CB.Rt]){
+    machine_state->X[PC] = machine_state->X[PC] + (instr->CB.COND_BR_address * 4); 
+  }
 }
 
 void CBNZ(machine_state_t *machine_state, instruction_t *instr){
-
+  if(machine_state->X[instr->CB.Rt] != 0){
+    machine_state->X[PC] = machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
+  }
 }
 
 void CBZ(machine_state_t *machine_state, instruction_t *instr){
-
+  if(machine_state->X[instr->CB.Rt] == 0){
+    machine_state->X[PC] = machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
+  }
 }
 
 /* ---------- D instructions ---------- */
 
 void LDUR(machine_state_t *machine_state, instruction_t *instr){
-
+  uint64_t build_num = 0;
+  for(int i = 0; i < 8; i ++){
+    build_num = build_num << 8;
+    if(instr->D.Rn == SP || instr->D.Rn == FP){
+      build_num = build_num | machine_state->stack[machine_state->X[instr->D.Rn] + 
+                                    instr->D.DT_address + i];
+    }else{
+      build_num = build_num | machine_state->main_mem[machine_state->X[instr->D.Rn] + 
+                                    instr->D.DT_address + i];
+    }
+  }
+  machine_state->X[instr->D.Rt] = build_num;
 }
 
 void STUR(machine_state_t *machine_state, instruction_t *instr){
-  
+  int shift = 0;
+  for(int i = 7; i >= 0; i--){
+    if(instr->D.Rn == SP || instr->D.Rn == FP){
+      machine_state->stack[machine_state->X[instr->D.Rn] + instr->D.DT_address + i] = 
+                            (uint8_t) (machine_state->X[instr->D.Rt] >> (shift * 8) & 0xff);
+    }else{
+      machine_state->main_mem[machine_state->X[instr->D.Rn] + instr->D.DT_address + i] = 
+                            (uint8_t) (machine_state->X[instr->D.Rt] >> (shift * 8) & 0xff);
+    }
+    shift++;
+  }
 }
 
 /* -------- Custom instructions ------- */
@@ -247,7 +280,7 @@ void DUMP(machine_state_t *machine_state, instruction_t *instr) {
   print_hexdump((int8_t *)machine_state->stack, STACK_SIZE);
 
   printf("\nMain Memory:\n");
-  print_hexdump((int8_t *)machine_state->X, MAIN_MEMORY_SIZE);
+  print_hexdump((int8_t *)machine_state->main_mem, MAIN_MEMORY_SIZE);
 }
 
 void HALT(machine_state_t *machine_state, instruction_t *instr) {
