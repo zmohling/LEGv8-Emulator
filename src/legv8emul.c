@@ -25,14 +25,14 @@ int main(int argc, char* argv[]) {
 
 #ifdef DEBUG_MODE
     // Print bits of each instruction
-    for (int i = 0; instructions[i]; i++) {
-      printf("%s\n", DEBUG_bits(instructions[i]));
+    for (int i = 0; machine_state.instructions[i]; i++) {
+      printf("%s\n", DEBUG_bits(machine_state.instructions[i]));
 
       /* Parse Instruction */
-      instruction_t instruction = parse(&instructions[i]);
+      instruction_t instruction = parse(&machine_state.instructions[i]);
 
       /* Execute Instruction */
-      instruction.instruction_func(X, &instruction);
+      instruction.instruction_func(&machine_state, &instruction);
     }
 
 #endif
@@ -42,16 +42,6 @@ int main(int argc, char* argv[]) {
     return 0;
   }
 
-  for (int i = 0; i < 32; i++) {
-    //ADDI(X, i, i, i * 10000);
-  }
-  // ADDI(X, 9, 9, 1);
-  // DUMP(X, REG_SIZE, stack, STACK_SIZE);
-
-  // printf("%d\n", (int)X[9]);
-  // AND(X, 10, 9, 8);
-
-  // printf("result: %lu\n", X[10]);
-  //
+  DUMP(&machine_state, NULL);
   return 0;
 }

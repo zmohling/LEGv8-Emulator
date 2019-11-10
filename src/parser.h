@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdlib.h>
+#include "legv8emul.h"
 
 // clang-format off
 #define OPCODE_ADD    0b10001011000000000000000000000000
@@ -49,7 +50,7 @@
 typedef struct instruction instruction_t;
 typedef struct instruction {
   /* The implementaion function */
-  void (*instruction_func)(uint64_t *, instruction_t *);
+  void (*instruction_func)(machine_state_t *, instruction_t *);
 
   union {
     uint32_t word;
@@ -112,7 +113,7 @@ typedef enum instruction_format {
 struct instruction_map {
   const uint32_t opcode;
   const instruction_format_t format;
-  void (*instruction_func)(uint64_t *, instruction_t *);
+  void (*instruction_func)(machine_state_t *, instruction_t *);
 };
 
 /* Opcode tree node */
@@ -120,7 +121,7 @@ typedef struct node node_t;
 typedef struct node {
   node_t *left, *right;
   unsigned data : 1;
-  void (*instruction_func)(uint64_t *, instruction_t *);
+  void (*instruction_func)(machine_state_t *, instruction_t *);
 } node_t;
 
 /* Tree structure to detect opcodes and map to respective implementation

@@ -6,6 +6,7 @@
 #include <string.h>
 
 #include "parser.h"
+#include "legv8emul.h"
 
 // clang-format off
 #define PC    16
@@ -45,11 +46,15 @@ void SUB(machine_state_t *machine_state, instruction_t *instr);
 
 void UDIV(machine_state_t *machine_state, instruction_t *instr);
 
-void UMULH(machine_state_t *machine_state, instruction_t *instr);
-
 void BR(machine_state_t *machine_state, instruction_t *instr);
 
 void SUBS(machine_state_t *machine_state, instruction_t *instr);
+
+void LSL(machine_state_t *machine_state, instruction_t *instr);
+
+void LSR(machine_state_t *machine_state, instruction_t *instr);
+
+void MUL(machine_state_t *machine_state, instruction_t *instr);
 
 /* I instructions */
 void ADDI(machine_state_t *machine_state, instruction_t *instr);
@@ -70,16 +75,16 @@ void B(machine_state_t *machine_state, instruction_t *instr);
 void BL(machine_state_t *machine_state, instruction_t *instr);
 
 /* CB instructions */
-void B_cond(machine_state_t *machine_state, instruction_t *instr);
+void B_COND(machine_state_t *machine_state, instruction_t *instr);
 
-void CBNZ();
+void CBNZ(machine_state_t *machine_state, instruction_t *instr);
 
-void CBZ();
+void CBZ(machine_state_t *machine_state, instruction_t *instr);
 
 /* D instructions */
 void LDUR(machine_state_t *machine_state, instruction_t *instr);
 
-//STUR()???
+void STUR(machine_state_t *machine_state, instruction_t *instr);
 
 /* custom instructions */
 void HALT(machine_state_t *machine_state, instruction_t *instr);

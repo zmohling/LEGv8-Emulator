@@ -70,11 +70,6 @@ void UDIV(machine_state_t *machine_state, instruction_t *instr) {
                                     machine_state->X[instr->R.Rm];
 }
 
-void UMULH(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] * 
-                                    machine_state->X[instr->R.Rm];
-}
-
 void BR(machine_state_t *machine_state, instruction_t *instr) {
   machine_state->X[PC] = machine_state->X[instr->R.Rd];
 }
@@ -83,6 +78,18 @@ void SUBS(machine_state_t *machine_state, instruction_t *instr) {
   int s = (int)machine_state->X[instr->R.Rn] - (int)machine_state->X[instr->R.Rm];
 
   set_all_flags(machine_state, s);
+}
+
+void LSL(machine_state_t *machine_state, instruction_t *instr){
+
+}
+
+void LSR(machine_state_t *machine_state, instruction_t *instr){
+
+}
+
+void MUL(machine_state_t *machine_state, instruction_t *instr){
+
 }
 
 /* ---------- I instructions ---------- */
@@ -114,7 +121,6 @@ void SUBI(machine_state_t *machine_state, instruction_t *instr) {
 
 void SUBIS(machine_state_t *machine_state, instruction_t *instr) {
   int s = (int)machine_state->X[instr->I.Rn] - (int)instr->I.ALU_immediate;
-
   set_all_flags(machine_state, s);
 }
 
@@ -131,13 +137,27 @@ void BL(machine_state_t *machine_state, instruction_t *instr) {
 
 /* ---------- CB instructions --------- */
 
-void B_cond(machine_state_t *machine_state, instruction_t *instr) {
+void B_COND(machine_state_t *machine_state, instruction_t *instr) {
   //TODO
+}
+
+void CBNZ(machine_state_t *machine_state, instruction_t *instr){
+
+}
+
+void CBZ(machine_state_t *machine_state, instruction_t *instr){
+
 }
 
 /* ---------- D instructions ---------- */
 
+void LDUR(machine_state_t *machine_state, instruction_t *instr){
 
+}
+
+void STUR(machine_state_t *machine_state, instruction_t *instr){
+  
+}
 
 /* -------- Custom instructions ------- */
 //didn't change any of these to be based on instruction type
