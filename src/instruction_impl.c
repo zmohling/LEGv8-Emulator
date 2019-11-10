@@ -66,6 +66,7 @@ void SUB(machine_state_t *machine_state, instruction_t *instr) {
 }
 
 void UDIV(machine_state_t *machine_state, instruction_t *instr) {
+
   machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] / 
                                     machine_state->X[instr->R.Rm];
 }
