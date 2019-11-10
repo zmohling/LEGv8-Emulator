@@ -1,4 +1,5 @@
 #include "instruction_impl.h"
+#include "legv8emul.h"
 
 #include <ctype.h>
 #include <stdint.h>
@@ -6,131 +7,131 @@
 #include <stdlib.h>
 #include <string.h>
 
-uint8_t FLAGS[FLAGS_LENGTH];
-
-void set_all_flags(int s) {
+void set_all_flags(machine_state_t *machine_state, int s) {
   for (int i = 0; i < FLAGS_LENGTH; i++) {
-    FLAGS[i] = 0;
+    machine_state->FLAGS[i] = 0;
   }
 
   if (s == 0) {
-    FLAGS[EQ] = 1;
+    machine_state->FLAGS[EQ] = 1;
   }
   if (s >= 0) {
-    FLAGS[GE] = 1;
-    FLAGS[HS] = 1;
-    FLAGS[PL] = 1;
+    machine_state->FLAGS[GE] = 1;
+    machine_state->FLAGS[HS] = 1;
+    machine_state->FLAGS[PL] = 1;
   }
   if (s > 0) {
-    FLAGS[GT] = 1;
-    FLAGS[HI] = 1;
+    machine_state->FLAGS[GT] = 1;
+    machine_state->FLAGS[HI] = 1;
   }
   if (s <= 0) {
-    FLAGS[LE] = 1;
-    FLAGS[LS] = 1;
+    machine_state->FLAGS[LE] = 1;
+    machine_state->FLAGS[LS] = 1;
   }
   if (s < 0) {
-    FLAGS[LO] = 1;
-    FLAGS[LT] = 1;
-    FLAGS[MI] = 1;
+    machine_state->FLAGS[LO] = 1;
+    machine_state->FLAGS[LT] = 1;
+    machine_state->FLAGS[MI] = 1;
   }
   if (s != 0) {
-    FLAGS[NE] = 1;
+    machine_state->FLAGS[NE] = 1;
   }
 }
 
 /* ---------- R instructions ---------- */
 
-void ADDD(uint64_t *X, instruction_t *instr) {
-  printf("ADD Rm: %u, shamt: %u, Rn: %u, Rd: %u\n", instr->R.Rm, instr->R.shamt,
-         instr->R.Rn, instr->R.Rd);
+void ADD(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] + 
+                                    machine_state->X[instr->R.Rm];
 }
 
-void ADDDI(uint64_t *X, instruction_t *instr) {
-  printf("ADDI ALU_immediate: %u, Rn: %u, Rd: %u\n", instr->I.ALU_immediate,
-         instr->I.Rn, instr->I.Rd);
+void AND(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] & 
+                                    machine_state->X[instr->R.Rm];
 }
 
-void ADD(uint64_t *X, instruction_t *instr) {
-  X[instr->R.Rd] = X[instr->R.Rn] + X[instr->R.Rm];
+void EOR(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] ^ 
+                                    machine_state->X[instr->R.Rm];
 }
 
-void AND(uint64_t *X, instruction_t *instr) {
-  X[instr->R.Rd] = X[instr->R.Rn] & X[instr->R.Rm];
+void ORR(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] | 
+                                    machine_state->X[instr->R.Rm];
 }
 
-void EOR(uint64_t *X, instruction_t *instr) {
-  X[instr->R.Rd] = X[instr->R.Rn] ^ X[instr->R.Rm];
+void SUB(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] - 
+                                    machine_state->X[instr->R.Rm];
 }
 
-void ORR(uint64_t *X, instruction_t *instr) {
-  X[instr->R.Rd] = X[instr->R.Rn] | X[instr->R.Rm];
+void UDIV(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] / 
+                                    machine_state->X[instr->R.Rm];
 }
 
-void SUB(uint64_t *X, instruction_t *instr) {
-  X[instr->R.Rd] = X[instr->R.Rn] - X[instr->R.Rm];
+void UMULH(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->R.Rd] = machine_state->X[instr->R.Rn] * 
+                                    machine_state->X[instr->R.Rm];
 }
 
-void UDIV(uint64_t *X, instruction_t *instr) {
-  X[instr->R.Rd] = X[instr->R.Rn] / X[instr->R.Rm];
+void BR(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[PC] = machine_state->X[instr->R.Rd];
 }
 
-void UMULH(uint64_t *X, instruction_t *instr) {
-  X[instr->R.Rd] = X[instr->R.Rn] * X[instr->R.Rm];
-}
+void SUBS(machine_state_t *machine_state, instruction_t *instr) {
+  int s = (int)machine_state->X[instr->R.Rn] - (int)machine_state->X[instr->R.Rm];
 
-void BR(uint64_t *X, instruction_t *instr) {
-  X[PC] = X[instr->R.Rd];
-}
-
-void SUBS(uint64_t *X, instruction_t *instr) {
-  int s = (int)X[instr->R.Rn] - (int)X[instr->R.Rm];
-
-  set_all_flags(s);
+  set_all_flags(machine_state, s);
 }
 
 /* ---------- I instructions ---------- */
 
-void ADDI(uint64_t *X, instruction_t *instr) {
-  X[instr->I.Rd] = X[instr->I.Rn] + instr->I.ALU_immediate;
+void ADDI(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] + 
+                                    instr->I.ALU_immediate;
 }
 
-void ANDI(uint64_t *X, instruction_t *instr) {
-  X[instr->I.Rd] = X[instr->I.Rn] & instr->I.ALU_immediate;
+void ANDI(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] & 
+                                    instr->I.ALU_immediate;
 }
 
-void EORI(uint64_t *X, instruction_t *instr) {
-  X[instr->I.Rd] = X[instr->I.Rn] ^ instr->I.ALU_immediate;
+void EORI(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] ^ 
+                                    instr->I.ALU_immediate;
 }
 
-void ORRI(uint64_t *X, instruction_t *instr) {
-  X[instr->I.Rd] = X[instr->I.Rn] | instr->I.ALU_immediate;
+void ORRI(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] | 
+                                    instr->I.ALU_immediate;
 }
 
-void SUBI(uint64_t *X, instruction_t *instr) {
-  X[instr->I.Rd] = X[instr->I.Rn] - instr->I.ALU_immediate;
+void SUBI(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[instr->I.Rd] = machine_state->X[instr->I.Rn] - 
+                                    instr->I.ALU_immediate;
 }
 
-void SUBIS(uint64_t *X, instruction_t *instr) {
-  int s = (int)X[instr->I.Rn] - (int)instr->I.ALU_immediate;
+void SUBIS(machine_state_t *machine_state, instruction_t *instr) {
+  int s = (int)machine_state->X[instr->I.Rn] - (int)instr->I.ALU_immediate;
 
-  set_all_flags(s);
+  set_all_flags(machine_state, s);
 }
 
 /* ---------- B instructions ---------- */
 
-void B(uint64_t *X, instruction_t *instr) { 
-  X[PC] = X[PC] + (instr->B.BR_address * 4); 
+void B(machine_state_t *machine_state, instruction_t *instr) { 
+  machine_state->X[PC] = machine_state->X[PC] + (instr->B.BR_address * 4); 
 }
 
-void BL(uint64_t *X, instruction_t *instr) {
-  X[LR] = X[PC] + (1 * 4);
-  X[PC] = X[PC] + (instr->B.BR_address * 4);
+void BL(machine_state_t *machine_state, instruction_t *instr) {
+  machine_state->X[LR] = machine_state->X[PC] + (1 * 4);
+  machine_state->X[PC] = machine_state->X[PC] + (instr->B.BR_address * 4);
 }
 
 /* ---------- CB instructions --------- */
 
-void B_cond(uint64_t *X, uint32_t COND_BR_address, uint8_t Rt) {
+void B_cond(machine_state_t *machine_state, instruction_t *instr) {
   //TODO
 }
 
@@ -191,52 +192,52 @@ void hexdump(FILE *f, int8_t *start, size_t size) {
   fprintf(f, "%08x\n", (int32_t)size);
 }
 
-void DUMP(uint64_t *X, size_t main_length, uint64_t *stack,
-          size_t stack_length) {
+void DUMP(machine_state_t *machine_state, instruction_t *instr) {
   printf("\nRegisters:\n");
 
   char *reg_name = "   ";
-  for (int i = 0; i < 32; i++) {
+  for (int i = 0; i < REG_SIZE; i++) {
     switch (i) {
-      case 16:
+      case PC:
         reg_name = "(PC)";
         break;
-      case 17:
+      case IP1:
         reg_name = "(IP1)";
         break;
-      case 28:
+      case SP:
         reg_name = "(SP)";
         break;
-      case 29:
+      case FP:
         reg_name = "(FP)";
         break;
-      case 30:
+      case LR:
         reg_name = "(LR)";
         break;
-      case 31:
+      case XZR:
         reg_name = "(XZR)";
         break;
       default:
         reg_name = "   ";
     }
-    printf("%6s X%02d: 0x%016lx (%d)\n", reg_name, i, X[i], (int)X[i]);
+    printf("%6s X%02d: 0x%016lx (%d)\n", reg_name, i, machine_state->X[i], 
+          (int)machine_state->X[i]);
   }
 
   printf("\nStack:\n");
-  print_hexdump((int8_t *)stack, stack_length);
+  print_hexdump((int8_t *)machine_state->stack, STACK_SIZE);
 
   printf("\nMain Memory:\n");
-  print_hexdump((int8_t *)X, main_length);
+  print_hexdump((int8_t *)machine_state->X, MAIN_MEMORY_SIZE);
 }
 
-void HALT(uint64_t *X, size_t main_length, uint64_t *stack,
-          size_t stack_length) {
-  DUMP(X, main_length, stack, stack_length);
+void HALT(machine_state_t *machine_state, instruction_t *instr) {
+  DUMP(machine_state, instr);
   exit(-1);
 }
 
-void PRNL() { printf("\n"); }
+void PRNL(machine_state_t *machine_state, instruction_t *instr) { printf("\n"); }
 
-void PRNT(uint64_t *X, uint8_t reg) {
-  printf("X%02d: 0x%016lx (%d)\n", reg, X[reg], (int)X[reg]);
+void PRNT(machine_state_t *machine_state, instruction_t *instr) {
+  printf("X%02d: 0x%016lx (%d)\n", instr->R.Rd, machine_state->X[instr->R.Rd], 
+          (int)machine_state->X[instr->R.Rd]);
 }

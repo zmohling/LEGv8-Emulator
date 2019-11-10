@@ -2,19 +2,13 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "legv8emul.h"
 #include "debug.h"
 #include "instruction_impl.h"
 #include "parser.h"
 #include "reader.h"
 
-#define MAIN_MEMORY_SIZE 4096
-#define STACK_SIZE 512
-#define REG_SIZE 32
-
-uint64_t X[REG_SIZE];                 // registers
-uint8_t stack[STACK_SIZE];            // stack
-uint8_t main_mem[MAIN_MEMORY_SIZE];   // main memory
-uint32_t* instructions;               // all instructions
+machine_state_t machine_state;
 
 /*
 Print out the usage for this program
@@ -24,11 +18,10 @@ void usage() {
 }
 
 int main(int argc, char* argv[]) {
-  uint32_t* instructions;
 
   if (argc == 2) {
     // create uint32_t array of instructions
-    instructions = read_instructions(argv[1]);
+    machine_state.instructions = read_instructions(argv[1]);
 
 #ifdef DEBUG_MODE
     // Print bits of each instruction

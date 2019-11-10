@@ -33,65 +33,61 @@
 // clang-format on
 
 /* R instructions */
-void ADD(uint64_t *X, instruction_t *);
+void ADD(machine_state_t *machine_state, instruction_t *instr);
 
-void ADDD(uint64_t *X, instruction_t *);
+void AND(machine_state_t *machine_state, instruction_t *instr);
 
-void ADDDI(uint64_t *X, instruction_t *);
+void EOR(machine_state_t *machine_state, instruction_t *instr);
 
-void AND(uint64_t *X, instruction_t *);
+void ORR(machine_state_t *machine_state, instruction_t *instr);
 
-void EOR(uint64_t *X, instruction_t *);
+void SUB(machine_state_t *machine_state, instruction_t *instr);
 
-void ORR(uint64_t *X, instruction_t *);
+void UDIV(machine_state_t *machine_state, instruction_t *instr);
 
-void SUB(uint64_t *X, instruction_t *);
+void UMULH(machine_state_t *machine_state, instruction_t *instr);
 
-void UDIV(uint64_t *X, instruction_t *);
+void BR(machine_state_t *machine_state, instruction_t *instr);
 
-void UMULH(uint64_t *X, instruction_t *);
-
-void BR(uint64_t *X, instruction_t *);
-
-void SUBS(uint64_t *X, instruction_t *);
+void SUBS(machine_state_t *machine_state, instruction_t *instr);
 
 /* I instructions */
-void ADDI(uint64_t *X, instruction_t *);
+void ADDI(machine_state_t *machine_state, instruction_t *instr);
 
-void ANDI(uint64_t *X, instruction_t *);
+void ANDI(machine_state_t *machine_state, instruction_t *instr);
 
-void EORI(uint64_t *X, instruction_t *);
+void EORI(machine_state_t *machine_state, instruction_t *instr);
 
-void ORRI(uint64_t *X, instruction_t *);
+void ORRI(machine_state_t *machine_state, instruction_t *instr);
 
-void SUBI(uint64_t *X, instruction_t *);
+void SUBI(machine_state_t *machine_state, instruction_t *instr);
 
-void SUBIS(uint64_t *X, instruction_t *);
+void SUBIS(machine_state_t *machine_state, instruction_t *instr);
 
 /* B instructions */
-void B(uint64_t *X, instruction_t *);
+void B(machine_state_t *machine_state, instruction_t *instr);
 
-void BL(uint64_t *X, instruction_t *);
+void BL(machine_state_t *machine_state, instruction_t *instr);
 
 /* CB instructions */
-void B_cond(uint64_t *X, uint32_t COND_BR_address, uint8_t Rt);
+void B_cond(machine_state_t *machine_state, instruction_t *instr);
 
 void CBNZ();
 
 void CBZ();
 
 /* D instructions */
-void LDUR(uint64_t *X, uint8_t *stack, instruction_t *);
+void LDUR(machine_state_t *machine_state, instruction_t *instr);
 
 //STUR()???
 
 /* custom instructions */
-void HALT(uint64_t *X, size_t reg_length, uint64_t *stack, size_t stack_length);
+void HALT(machine_state_t *machine_state, instruction_t *instr);
 
-void DUMP(uint64_t *X, size_t reg_length, uint64_t *stack, size_t stack_length);
+void DUMP(machine_state_t *machine_state, instruction_t *instr);
 
-void PRNL();
+void PRNL(machine_state_t *machine_state, instruction_t *instr);
 
-void PRNT(uint64_t *X, uint8_t reg);
+void PRNT(machine_state_t *machine_state, instruction_t *instr);
 
 #endif
