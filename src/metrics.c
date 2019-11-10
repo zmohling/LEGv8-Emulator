@@ -25,7 +25,7 @@ static void handle_data_hazard(instruction_t* instr) {
 
     /* Hazard condition */
     if ((reg_write) && (prev_instr->R.Rd != 31) &&
-        ((prev_instr->R.Rd = instr->R.Rn) ||
+        ((prev_instr->R.Rd == instr->R.Rn) ||
          (prev_instr->R.Rd == instr->R.Rm))) {
       num_cycles_pipelined += (2 - i);
     }

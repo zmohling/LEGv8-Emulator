@@ -19,7 +19,7 @@ void usage() {
   printf("USAGE: ./legv8emul <assembled legv8asm .machine file>\n");
 }
 
-void setup(machine_state_t *machine_state){
+void setup(machine_state_t* machine_state) {
   machine_state->X[SP] = STACK_SIZE;
   machine_state->X[FP] = STACK_SIZE;
   machine_state->X[XZR] = 0;
