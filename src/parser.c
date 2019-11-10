@@ -19,13 +19,12 @@ const struct instruction_map opcode_map[] = {
     {OPCODE_LSL, format_R, LSL},    {OPCODE_LSR, format_R, LSR},
     {OPCODE_MUL, format_R, MUL},    {OPCODE_ORR, format_R, ORR},
     {OPCODE_ORRI, format_I, ORRI},  {OPCODE_PRNL, format_R, PRNL},
-    {OPCODE_PRNT, format_R, PRNT},  {OPCODE_SDIV, format_R},
+    {OPCODE_PRNT, format_R, PRNT},  {OPCODE_UMULH, format_R},
     {OPCODE_SMULH, format_R},       {OPCODE_STUR, format_D, STUR},
     {OPCODE_STURB, format_D},       {OPCODE_STURH, format_D},
     {OPCODE_STURW, format_D},       {OPCODE_SUB, format_R, SUB},
     {OPCODE_SUBI, format_I, SUBI},  {OPCODE_SUBIS, format_I, SUBIS},
-    {OPCODE_SUBS, format_R, SUBS},  {OPCODE_UDIV, format_R, UDIV},
-    {OPCODE_UMULH, format_R}};
+    {OPCODE_SUBS, format_R, SUBS},  {OPCODE_UDIV, format_R, UDIV}};
 
 /* Mapping of format type to its opcode size */
 static const uint32_t opcode_size_format_map[] = {0, 11, 10, 11, 6, 8, 9};
