@@ -174,15 +174,19 @@ void LDUR(machine_state_t *machine_state, instruction_t *instr) {
   uint64_t build_num = 0;
   for (int i = 0; i < 8; i++) {
     build_num = build_num << 8;
+    int address = machine_state->X[instr->D.Rn] + instr->D.DT_address + i;
     if (instr->D.Rn == SP || instr->D.Rn == FP) {
-      build_num =
-          build_num |
-          machine_state
-              ->stack[machine_state->X[instr->D.Rn] + instr->D.DT_address + i];
+      if(address >= STACK_SIZE || address < 0){
+        printf("OUT OF BOUNDS on STACK during LDUR\n");
+        HALT(machine_state, instr);
+      }
+      build_num = build_num | machine_state->stack[address];
     } else {
-      build_num =
-          build_num | machine_state->main_mem[machine_state->X[instr->D.Rn] +
-                                              instr->D.DT_address + i];
+      if(address >= MAIN_MEMORY_SIZE || address < 0){
+        printf("OUT OF BOUNDS on MAIN MEMORY during LDUR\n");
+        HALT(machine_state, instr);
+      }
+      build_num = build_num | machine_state->main_mem[address];
     }
   }
   machine_state->X[instr->D.Rt] = build_num;
@@ -191,13 +195,20 @@ void LDUR(machine_state_t *machine_state, instruction_t *instr) {
 void STUR(machine_state_t *machine_state, instruction_t *instr) {
   int shift = 0;
   for (int i = 7; i >= 0; i--) {
+    int address = machine_state->X[instr->D.Rn] + instr->D.DT_address + i;
     if (instr->D.Rn == SP || instr->D.Rn == FP) {
-      machine_state
-          ->stack[machine_state->X[instr->D.Rn] + instr->D.DT_address + i] =
+      if(address >= STACK_SIZE || address < 0){
+        printf("OUT OF BOUNDS on STACK during STUR\n");
+        HALT(machine_state, instr);
+      }
+      machine_state->stack[address] = 
           (uint8_t)(machine_state->X[instr->D.Rt] >> (shift * 8) & 0xff);
     } else {
-      machine_state
-          ->main_mem[machine_state->X[instr->D.Rn] + instr->D.DT_address + i] =
+      if(address >= MAIN_MEMORY_SIZE || address < 0){
+        printf("OUT OF BOUNDS on MAIN MEMORY during STUR\n");
+        HALT(machine_state, instr);
+      }
+      machine_state->main_mem[address] =
           (uint8_t)(machine_state->X[instr->D.Rt] >> (shift * 8) & 0xff);
     }
     shift++;
@@ -284,7 +295,7 @@ void DUMP(machine_state_t *machine_state, instruction_t *instr) {
       default:
         reg_name = "   ";
     }
-    printf("%6s X%02d: 0x%016llx (%d)\n", reg_name, i, machine_state->X[i],
+    printf("%6s X%02d: 0x%016lx (%d)\n", reg_name, i, (uint64_t)machine_state->X[i],
            (int)machine_state->X[i]);
   }
 
@@ -305,6 +316,6 @@ void PRNL(machine_state_t *machine_state, instruction_t *instr) {
 }
 
 void PRNT(machine_state_t *machine_state, instruction_t *instr) {
-  printf("X%02d: 0x%016llx (%d)\n", instr->R.Rd, machine_state->X[instr->R.Rd],
+  printf("X%02d: 0x%016lx (%d)\n", instr->R.Rd, (uint64_t) machine_state->X[instr->R.Rd],
          (int)machine_state->X[instr->R.Rd]);
 }

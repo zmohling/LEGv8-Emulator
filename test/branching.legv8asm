@@ -1,0 +1,7 @@
+SUBI X9, X9, #5
+loop1:
+  ADDI X9, X9, #1
+  CBZ X9, end
+  B loop1
+end:
+  DUMP
