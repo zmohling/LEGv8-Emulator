@@ -46,15 +46,35 @@ int main(int argc, char* argv[]) {
 //    }
 #endif
 
-    for (int i = 0; i < num_instructions; i++) {
-      /* Parse Instruction */
-      instruction_t instruction = parse(&machine_state.instructions[i]);
+    // for (int i = 0; i < num_instructions; i++) {
+    //   /* Parse Instruction */
+    //   instruction_t instruction = parse(&machine_state.instructions[i]);
 
-      /* Log and analyze */
-      analyze_instruction(&instruction);
+    //   /* Log and analyze */
+    //   analyze_instruction(&instruction);
 
-      /* Execute Instruction */
-      instruction.instruction_func(&machine_state, &instruction);
+    //   /* Execute Instruction */
+    //   instruction.instruction_func(&machine_state, &instruction);
+    // }
+    printf("Total instructions: %llu\n", num_instructions);
+    if(num_instructions > 0){
+      while((int)(machine_state.X[PC] / 4) > -1){
+        printf("PC: %ld\n", machine_state.X[PC] / 4);
+        /* Parse Instruction */
+        instruction_t instruction = parse(&machine_state.instructions[machine_state.X[PC] / 4]);
+
+        /* Log and analyze */
+        analyze_instruction(&instruction);
+
+        /* Execute Instruction */
+        instruction.instruction_func(&machine_state, &instruction);
+
+        machine_state.X[PC] = machine_state.X[PC] + 4;
+
+        if(machine_state.X[PC] / 4 >= num_instructions && instruction.format != format_B){
+          break;
+        }
+      }
     }
 
   } else {

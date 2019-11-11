@@ -137,7 +137,8 @@ void SUBIS(machine_state_t *machine_state, instruction_t *instr) {
 /* ---------- B instructions ---------- */
 
 void B(machine_state_t *machine_state, instruction_t *instr) {
-  machine_state->X[PC] = machine_state->X[PC] + (instr->B.BR_address * 4);
+  printf("Branching offset: %d\n", (int16_t)instr->B.BR_address * 4 - 4);
+  machine_state->X[PC] = machine_state->X[PC] + (int16_t)(instr->B.BR_address) * 4 - 4;
 }
 
 void BL(machine_state_t *machine_state, instruction_t *instr) {

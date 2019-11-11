@@ -35,6 +35,7 @@ typedef struct machine_state {
   uint8_t stack[STACK_SIZE];            // stack
   uint8_t main_mem[MAIN_MEMORY_SIZE];   // main memory
   uint32_t* instructions;               // all instructions
+  int num_instructions;
   uint8_t FLAGS[FLAGS_LENGTH];
 } machine_state_t;
 
