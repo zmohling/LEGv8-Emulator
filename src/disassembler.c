@@ -17,9 +17,6 @@ static char *get_instr_string(instruction_t *instr) {
   if (func == AND) func_name = strdup("AND");
   if (func == ANDI) func_name = strdup("ANDI");
   if (func == B) func_name = strdup("B");
-
-  if (func == B_COND) func_name = strdup("B.cond");
-
   if (func == BL) func_name = strdup("BL");
   if (func == BR) func_name = strdup("BR");
   if (func == CBNZ) func_name = strdup("CBNZ");
@@ -42,6 +39,25 @@ static char *get_instr_string(instruction_t *instr) {
   if (func == SUBIS) func_name = strdup("SUBIS");
   if (func == SUBS) func_name = strdup("SUBS");
   if (func == UDIV) func_name = strdup("UDIV");
+
+  if (func == B_COND){
+    switch(instr->CB.Rt){
+      case EQ: func_name = strdup("B.EQ"); break;
+      case NE: func_name = strdup("B.NE"); break;
+      case HS: func_name = strdup("B.HS"); break;
+      case LO: func_name = strdup("B.LO"); break;
+      case MI: func_name = strdup("B.MI"); break;
+      case PL: func_name = strdup("B.PL"); break;
+      case VS: func_name = strdup("B.VS"); break;
+      case VC: func_name = strdup("B.VC"); break;
+      case HI: func_name = strdup("B.HI"); break;
+      case LS: func_name = strdup("B.LS"); break;
+      case GE: func_name = strdup("B.GE"); break;
+      case LT: func_name = strdup("B.LT"); break;
+      case GT: func_name = strdup("B.GT"); break;
+      case LE: func_name = strdup("B.LE"); break;
+    }
+  }
 
   if (instr->format == format_R)
     asprintf(&result, "%s X%u, X%u, X%u", func_name, instr->R.Rd, instr->R.Rn,
