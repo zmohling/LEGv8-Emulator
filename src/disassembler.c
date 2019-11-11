@@ -56,7 +56,8 @@ static char *get_instr_string(instruction_t *instr) {
              instr->D.DT_address);
 
   if (instr->format == format_B)
-    asprintf(&result, "%s %d", func_name, instr->B.BR_address);
+    asprintf(&result, "%s %d", func_name,
+             ((int32_t)((instr->B.BR_address) << 6)) >> 6);
 
   if (instr->format == format_CB)
     asprintf(&result, "%s %u, %d", func_name, instr->CB.Rt,
