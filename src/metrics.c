@@ -64,7 +64,8 @@ void analyze_instruction(instruction_t* instr) {
 }
 
 void print_statistics() {
-  printf("\nNumber of cycles (unpipelined): %u (%u)\n", num_cycles_unpipelined,
+  printf("\nSTATISTICS:\n");
+  printf("Number of cycles (unpipelined): %u (%u)\n", num_cycles_unpipelined,
          num_cycles_unpipelined * 5);
   printf("Number of cycles (pipelined): %u\n", num_cycles_pipelined);
   printf("Number of data hazards: %u\n", num_data_hazards);

@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "debug.h"
+#include "disassembler.h"
 #include "instruction_impl.h"
 #include "metrics.h"
 #include "parser.h"
@@ -50,8 +51,11 @@ int main(int argc, char* argv[]) {
       /* Parse Instruction */
       instruction_t instruction = parse(&machine_state.instructions[i]);
 
-      /* Log and analyze */
+      /* Log to metrics module */
       analyze_instruction(&instruction);
+
+      /* Log to disassembler module */
+      log_instruction(&instruction);
 
       /* Execute Instruction */
       instruction.instruction_func(&machine_state, &instruction);
@@ -66,6 +70,8 @@ int main(int argc, char* argv[]) {
 
   /* Print metrics */
   print_statistics();
+
+  print_disassembled();
 
   return 0;
 }
