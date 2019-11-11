@@ -4,4 +4,4 @@ loop1:
   CBZ X9, end
   B loop1
 end:
-  DUMP
+  ADDI X9, X9, #69

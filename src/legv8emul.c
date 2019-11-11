@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "debug.h"
-#include "disassembler.h"
 #include "instruction_impl.h"
 #include "metrics.h"
 #include "parser.h"
@@ -48,15 +47,25 @@ int main(int argc, char* argv[]) {
 //    }
 #endif
 
-    for (int i = 0; i < num_instructions; i++) {
-      /* Parse Instruction */
-      instruction_t instruction = parse(&machine_state.instructions[i]);
+    if (num_instructions > 0) {
+      while ((int)(machine_state.X[PC] / 4) > -1) {
+        /* Parse Instruction */
+        instruction_t instruction =
+            parse(&machine_state.instructions[machine_state.X[PC] / 4]);
 
-      /* Log to metrics module */
-      analyze_instruction(&instruction);
+        /* Log and analyze */
+        analyze_instruction(&instruction);
 
-      /* Execute Instruction */
-      instruction.instruction_func(&machine_state, &instruction);
+        /* Execute Instruction */
+        instruction.instruction_func(&machine_state, &instruction);
+
+        machine_state.X[PC] = machine_state.X[PC] + 4;
+
+        if (machine_state.X[PC] / 4 >= num_instructions &&
+            instruction.format != format_B) {
+          break;
+        }
+      }
     }
 
   } else {
@@ -68,9 +77,6 @@ int main(int argc, char* argv[]) {
 
   /* Print metrics */
   print_statistics();
-
-  /* Log to disassembler module */
-  disassemble(&machine_state);
 
   return 0;
 }
