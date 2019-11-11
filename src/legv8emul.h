@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+// clang-format off
 #define MAIN_MEMORY_SIZE    4096
 #define STACK_SIZE          512
 #define REG_SIZE            32
@@ -29,12 +30,14 @@
 #define GT    12
 #define LE    13
 #define FLAGS_LENGTH 14
+// clang-format on
 
 typedef struct machine_state {
-  uint64_t X[REG_SIZE];                 // registers
-  uint8_t stack[STACK_SIZE];            // stack
-  uint8_t main_mem[MAIN_MEMORY_SIZE];   // main memory
-  uint32_t* instructions;               // all instructions
+  uint64_t X[REG_SIZE];                // registers
+  uint8_t stack[STACK_SIZE];           // stack
+  uint8_t main_mem[MAIN_MEMORY_SIZE];  // main memory
+  uint32_t* instructions;              // all instructions
+  uint64_t num_instructions;
   uint8_t FLAGS[FLAGS_LENGTH];
 } machine_state_t;
 

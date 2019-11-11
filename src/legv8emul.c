@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
 
     unsigned long long num_instructions = 0;
     machine_state.instructions = read_instructions(argv[1], &num_instructions);
+    machine_state.num_instructions = num_instructions;
 
 #ifdef DEBUG_MODE
 //    // Print bits of each instruction
@@ -54,9 +55,6 @@ int main(int argc, char* argv[]) {
       /* Log to metrics module */
       analyze_instruction(&instruction);
 
-      /* Log to disassembler module */
-      log_instruction(&instruction);
-
       /* Execute Instruction */
       instruction.instruction_func(&machine_state, &instruction);
     }
@@ -71,7 +69,8 @@ int main(int argc, char* argv[]) {
   /* Print metrics */
   print_statistics();
 
-  print_disassembled();
+  /* Log to disassembler module */
+  disassemble(&machine_state);
 
   return 0;
 }

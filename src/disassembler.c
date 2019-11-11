@@ -5,25 +5,8 @@
 #include <string.h>
 
 #include "instruction_impl.h"
+#include "legv8emul.h"
 #include "parser.h"
-
-static instruction_stack_t *stack;
-
-void log_instruction(instruction_t *instr) {
-  if (!stack) {
-    stack = malloc(sizeof(instruction_stack_t));
-  }
-
-  stack_node_t *new_head = malloc(sizeof(stack_node_t));
-  new_head->instr = *instr;
-
-  if (!stack->head) {
-    stack->head = new_head;
-  } else {
-    new_head->prev = stack->head;
-    stack->head = new_head;
-  }
-}
 
 static char *get_instr_string(instruction_t *instr) {
   void (*func)(machine_state_t *, instruction_t *) = instr->instruction_func;
@@ -82,16 +65,11 @@ static char *get_instr_string(instruction_t *instr) {
   return result;
 }
 
-static void traverse_call_stack(stack_node_t *head) {
-  if (head->prev != NULL) {
-    traverse_call_stack(head->prev);
-  }
-
-  printf("%s\n", get_instr_string(&head->instr));
-}
-
-void print_disassembled() {
+void disassemble(machine_state_t *machine_state) {
   printf("\nDISASSEMBLED PROGRAM:\n");
 
-  traverse_call_stack(stack->head);
+  for (int i = 0; i < machine_state->num_instructions; i++) {
+    instruction_t instr = parse(&(machine_state->instructions[i]));
+    printf("%s\n", get_instr_string(&instr));
+  }
 }
