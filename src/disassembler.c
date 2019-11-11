@@ -1,6 +1,7 @@
 #include "disassembler.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "instruction_impl.h"
@@ -26,7 +27,7 @@ void log_instruction(instruction_t *instr) {
 
 static char *get_instr_string(instruction_t *instr) {
   void (*func)(machine_state_t *, instruction_t *) = instr->instruction_func;
-  char *result = NULL, *func_name = NULL;
+  char *result, *func_name = "";
 
   if (func == ADD) func_name = strdup("ADD");
   if (func == ADDI) func_name = strdup("ADDI");
