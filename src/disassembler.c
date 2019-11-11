@@ -40,6 +40,7 @@ static char *get_instr_string(instruction_t *instr) {
   if (func == SUBS) func_name = strdup("SUBS");
   if (func == UDIV) func_name = strdup("UDIV");
 
+  // clang-format off
   if (func == B_COND){
     switch(instr->CB.Rt){
       case EQ: func_name = strdup("B.EQ"); break;
@@ -58,6 +59,7 @@ static char *get_instr_string(instruction_t *instr) {
       case LE: func_name = strdup("B.LE"); break;
     }
   }
+  // clang-format on
 
   if (instr->format == format_R)
     asprintf(&result, "%s X%u, X%u, X%u", func_name, instr->R.Rd, instr->R.Rn,
@@ -76,7 +78,7 @@ static char *get_instr_string(instruction_t *instr) {
              ((int32_t)((instr->B.BR_address) << 6)) >> 6);
 
   if (instr->format == format_CB)
-    asprintf(&result, "%s %u, %d", func_name, instr->CB.Rt,
+    asprintf(&result, "%s X%u, %d", func_name, instr->CB.Rt,
              instr->CB.COND_BR_address);
 
   return result;
