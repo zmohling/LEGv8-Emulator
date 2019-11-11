@@ -137,13 +137,12 @@ void SUBIS(machine_state_t *machine_state, instruction_t *instr) {
 /* ---------- B instructions ---------- */
 
 void B(machine_state_t *machine_state, instruction_t *instr) {
-  printf("Branching offset: %d\n", (int16_t)instr->B.BR_address * 4 - 4);
   machine_state->X[PC] = machine_state->X[PC] + (int16_t)(instr->B.BR_address) * 4 - 4;
 }
 
 void BL(machine_state_t *machine_state, instruction_t *instr) {
   machine_state->X[LR] = machine_state->X[PC] + (1 * 4);
-  machine_state->X[PC] = machine_state->X[PC] + (instr->B.BR_address * 4);
+  machine_state->X[PC] = machine_state->X[PC] + (int16_t)(instr->B.BR_address * 4 - 4);
 }
 
 /* ---------- CB instructions --------- */
@@ -151,21 +150,21 @@ void BL(machine_state_t *machine_state, instruction_t *instr) {
 void B_COND(machine_state_t *machine_state, instruction_t *instr) {
   if (machine_state->FLAGS[instr->CB.Rt]) {
     machine_state->X[PC] =
-        machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
+        machine_state->X[PC] + (int16_t)(instr->CB.COND_BR_address * 4 - 4);
   }
 }
 
 void CBNZ(machine_state_t *machine_state, instruction_t *instr) {
   if (machine_state->X[instr->CB.Rt] != 0) {
     machine_state->X[PC] =
-        machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
+        machine_state->X[PC] + (int16_t)(instr->CB.COND_BR_address * 4 - 4);
   }
 }
 
 void CBZ(machine_state_t *machine_state, instruction_t *instr) {
   if (machine_state->X[instr->CB.Rt] == 0) {
     machine_state->X[PC] =
-        machine_state->X[PC] + (instr->CB.COND_BR_address * 4);
+        machine_state->X[PC] + (int16_t)(instr->CB.COND_BR_address * 4 - 4);
   }
 }
 

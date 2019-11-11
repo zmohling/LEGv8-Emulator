@@ -28,6 +28,7 @@ void setup(machine_state_t* machine_state) {
 }
 
 int main(int argc, char* argv[]) {
+  int do_dump = 1;
   if (argc == 2) {
     setup(&machine_state);
 
@@ -47,21 +48,8 @@ int main(int argc, char* argv[]) {
 //    }
 #endif
 
-    // for (int i = 0; i < num_instructions; i++) {
-    //   /* Parse Instruction */
-    //   instruction_t instruction = parse(&machine_state.instructions[i]);
-
-<<<<<<< HEAD
-    //   /* Log and analyze */
-    //   analyze_instruction(&instruction);
-
-    //   /* Execute Instruction */
-    //   instruction.instruction_func(&machine_state, &instruction);
-    // }
-    printf("Total instructions: %llu\n", num_instructions);
     if(num_instructions > 0){
       while((int)(machine_state.X[PC] / 4) > -1){
-        printf("PC: %ld\n", machine_state.X[PC] / 4);
         /* Parse Instruction */
         instruction_t instruction = parse(&machine_state.instructions[machine_state.X[PC] / 4]);
 
@@ -74,27 +62,23 @@ int main(int argc, char* argv[]) {
         machine_state.X[PC] = machine_state.X[PC] + 4;
 
         if(machine_state.X[PC] / 4 >= num_instructions && instruction.format != format_B){
+          if(instruction.format = format_R){
+            if(instruction.R.opcode = OPCODE_DUMP){
+              do_dump = 0;
+            }
+          }
           break;
         }
       }
-=======
-      /* Log to metrics module */
-      analyze_instruction(&instruction);
-
-      /* Log to disassembler module */
-      log_instruction(&instruction);
-
-      /* Execute Instruction */
-      instruction.instruction_func(&machine_state, &instruction);
->>>>>>> 0998aa8a6c95a03479266a8432592eb2542e9617
     }
 
   } else {
     usage();
     return 0;
   }
-
-  DUMP(&machine_state, NULL);
+  if(do_dump){
+    DUMP(&machine_state, NULL);
+  }
 
   /* Print metrics */
   print_statistics();
