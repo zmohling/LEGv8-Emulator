@@ -5,7 +5,6 @@
 #include <string.h>
 
 #include "debug.h"
-#include "disassembler.h"
 #include "instruction_impl.h"
 #include "metrics.h"
 #include "parser.h"
@@ -28,7 +27,6 @@ void setup(machine_state_t* machine_state) {
 }
 
 int main(int argc, char* argv[]) {
-  int do_dump = 1;
   if (argc == 2) {
     setup(&machine_state);
 
@@ -62,11 +60,6 @@ int main(int argc, char* argv[]) {
         machine_state.X[PC] = machine_state.X[PC] + 4;
 
         if(machine_state.X[PC] / 4 >= num_instructions && instruction.format != format_B){
-          if(instruction.format = format_R){
-            if(instruction.R.opcode = OPCODE_DUMP){
-              do_dump = 0;
-            }
-          }
           break;
         }
       }
@@ -76,14 +69,11 @@ int main(int argc, char* argv[]) {
     usage();
     return 0;
   }
-  if(do_dump){
-    DUMP(&machine_state, NULL);
-  }
+
+  DUMP(&machine_state, NULL);
 
   /* Print metrics */
   print_statistics();
-
-  print_disassembled();
 
   return 0;
 }

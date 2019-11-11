@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "legv8emul.h"
+#include "disassembler.h"
 
 void set_all_flags(machine_state_t *machine_state, int s) {
   for (int i = 0; i < FLAGS_LENGTH; i++) {
@@ -304,6 +305,8 @@ void DUMP(machine_state_t *machine_state, instruction_t *instr) {
 
   printf("\nMain Memory:\n");
   print_hexdump((int8_t *)machine_state->main_mem, MAIN_MEMORY_SIZE);
+
+  print_disassembled();
 }
 
 void HALT(machine_state_t *machine_state, instruction_t *instr) {
